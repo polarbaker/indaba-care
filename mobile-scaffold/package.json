@@ -1,0 +1,44 @@
+{
+  "name": "indaba-care-mobile",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.0",
+    "@react-navigation/bottom-tabs": "^6.3.0",
+    "@react-navigation/native": "^6.0.0",
+    "@react-navigation/native-stack": "^6.6.0",
+    "expo": "~45.0.0",
+    "expo-camera": "~12.2.0",
+    "expo-file-system": "~14.0.0",
+    "expo-image-picker": "~13.1.0",
+    "expo-status-bar": "~1.3.0",
+    "firebase": "^9.6.0",
+    "i18n-js": "^3.9.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-native": "0.68.0",
+    "react-native-gesture-handler": "~2.2.0",
+    "react-native-paper": "^4.12.0",
+    "react-native-reanimated": "~2.8.0",
+    "react-native-safe-area-context": "4.2.4",
+    "react-native-screens": "~3.11.0",
+    "react-native-svg": "12.3.0",
+    "react-native-web": "0.17.7",
+    "react-query": "^3.34.0",
+    "watermelondb": "^0.23.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@types/react": "~17.0.21",
+    "@types/react-native": "~0.67.6",
+    "typescript": "~4.3.5"
+  },
+  "private": true
+}
