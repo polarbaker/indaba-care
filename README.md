@@ -159,6 +159,56 @@ For the React Native mobile version:
 
 This project is licensed under the ISC License.
 
+## Testing
+
+Indaba Care uses Jest and React Testing Library for unit and integration tests. The test suite is designed to be junior-developer friendly and covers components, hooks, and contexts.
+
+### Running Tests
+
+To run all tests:
+
+```bash
+npm test
+# or
+yarn test
+```
+
+To run tests in watch mode (recommended during development):
+
+```bash
+npm test -- --watch
+# or
+yarn test --watch
+```
+
+To run a specific test file:
+
+```bash
+npm test -- tests/hooks/useSync.test.tsx
+# or
+yarn test tests/hooks/useSync.test.tsx
+```
+
+### Understanding the Test Suite
+
+1. **Mock Implementations**: The application uses mocks for external dependencies like Firebase and PouchDB. These mocks are located in `tests/__mocks__/`.
+
+2. **Component Tests**: Components are tested with React Testing Library. See examples in `tests/components/`.
+
+3. **Hook Tests**: Custom hooks are tested with `@testing-library/react-hooks`. See examples in `tests/hooks/`.
+
+4. **Context Tests**: React contexts are tested by rendering them with a test wrapper. See examples in `tests/contexts/`.
+
+5. **Test Setup**: Global test setup is in `tests/jest.setup.js` and Jest configuration is in `jest.config.js`.
+
+### Tips for Junior Developers
+
+- Look at existing tests to understand patterns before writing new ones
+- Use the provided mocks for external dependencies
+- Test components in isolation using mocks for child components when necessary
+- For hooks that depend on Firebase or PouchDB, use the existing mock implementations
+- Remember to test both success and error cases
+
 ## Acknowledgments
 
 - Next.js
@@ -167,3 +217,5 @@ This project is licensed under the ISC License.
 - Chakra UI
 - React Query
 - Workbox
+- Jest
+- React Testing Library
