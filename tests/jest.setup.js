@@ -1,5 +1,12 @@
 // Add Jest setup code
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
+
+// Add polyfill for structuredClone which is used by Chakra UI but not available in the Jest environment
+if (typeof global.structuredClone !== 'function') {
+  global.structuredClone = function structuredClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  };
+}
 
 // Mock next/router
 jest.mock('next/router', () => ({
@@ -51,8 +58,9 @@ jest.mock('pouchdb', () => {
 // Mock Firebase
 jest.mock('firebase/app', () => {
   return {
-    initializeApp: jest.fn(),
-    getApps: jest.fn(() => []),
+    initializeApp: jest.fn(() => ({})),
+    getApps: jest.fn(() => [{}]),
+    getApp: jest.fn(() => ({})),
   };
 });
 
@@ -71,7 +79,7 @@ jest.mock('firebase/auth', () => {
 
 jest.mock('firebase/firestore', () => {
   return {
-    getFirestore: jest.fn(),
+    getFirestore: jest.fn(() => ({})),
     collection: jest.fn(),
     doc: jest.fn(),
     getDoc: jest.fn(),
@@ -82,6 +90,17 @@ jest.mock('firebase/firestore', () => {
     where: jest.fn(),
     orderBy: jest.fn(),
     limit: jest.fn(),
+  };
+});
+
+// Mock Firebase Storage
+jest.mock('firebase/storage', () => {
+  return {
+    getStorage: jest.fn(() => ({})),
+    ref: jest.fn(),
+    uploadBytesResumable: jest.fn(),
+    getDownloadURL: jest.fn(),
+    deleteObject: jest.fn(),
   };
 });
 

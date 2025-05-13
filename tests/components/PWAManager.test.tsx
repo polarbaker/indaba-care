@@ -1,5 +1,16 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
+// Mock the Chakra UI components instead of using the actual ChakraProvider
+jest.mock('@chakra-ui/react', () => {
+  const originalModule = jest.requireActual('@chakra-ui/react');
+  return {
+    __esModule: true,
+    ...originalModule,
+    Box: ({ children, ...props }: any) => <div data-testid={props['data-testid']}>{children}</div>,
+    Text: ({ children }: any) => <span>{children}</span>,
+    Button: ({ children, onClick }: any) => <button onClick={onClick} data-testid="update-button">{children}</button>
+  };
+});
 import PWAManager from '../../src/components/PWAManager';
 
 // Mock global navigator
