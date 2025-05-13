@@ -105,9 +105,13 @@ describe('PWAManager Component', () => {
 
     // Verify postMessage was called to trigger the skipWaiting
     await act(async () => {
-      expect(
-        (await window.navigator.serviceWorker.ready).waiting.postMessage
-      ).toHaveBeenCalledWith({ type: 'SKIP_WAITING' });
+      const registration = await window.navigator.serviceWorker.ready;
+      if (registration.waiting) {
+        expect(registration.waiting.postMessage).toHaveBeenCalledWith({ type: 'SKIP_WAITING' });
+      } else {
+        // This should not happen in our test setup, but added for TypeScript safety
+        throw new Error('Service worker waiting is null');
+      }
     });
   });
 });

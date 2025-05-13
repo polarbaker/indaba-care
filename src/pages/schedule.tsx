@@ -2,41 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
+  Flex,
   Heading,
   Text,
-  Button,
   SimpleGrid,
-  Flex,
-  Stack,
-  Card,
-  CardHeader,
-  CardBody,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Badge,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Select,
-  Textarea,
-  useToast,
-  HStack,
-  VStack,
   Spinner,
-  Tag,
-  IconButton,
 } from '@chakra-ui/react';
+
+// Import components from their specific packages
+import { useDisclosure } from '@chakra-ui/react';
+import { Button, IconButton } from '@chakra-ui/button';
+import { Stack, HStack, VStack } from '@chakra-ui/layout';
+import { FormControl, FormLabel } from '@chakra-ui/form-control';
+import { Select } from '@chakra-ui/select';
+import { Textarea } from '@chakra-ui/react';
+import { Tag } from '@chakra-ui/tag';
+import { 
+  Modal, 
+  ModalOverlay, 
+  ModalContent, 
+  ModalHeader, 
+  ModalBody, 
+  ModalFooter, 
+  ModalCloseButton 
+} from '@chakra-ui/modal';
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from '@chakra-ui/table';
+import { Card, CardHeader, CardBody } from '@chakra-ui/card';
+import { useToast } from '@chakra-ui/toast';
 import Layout from '../components/Layout';
 import { useAuthContext } from '../contexts/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -123,7 +116,7 @@ function Calendar({ sessions, children, onSessionClick }: {
             </Text>
             <Text fontSize="lg">{format(day, 'd')}</Text>
             
-            <VStack spacing={1} mt={2} align="stretch">
+            <VStack gap={1} mt={2} align="stretch">
               {weekSessions
                 .filter(session => {
                   const sessionDate = new Date(session.startTime);
@@ -142,9 +135,7 @@ function Calendar({ sessions, children, onSessionClick }: {
                     onClick={() => onSessionClick(session)}
                     _hover={{ opacity: 0.8 }}
                   >
-                    <Text fontWeight="bold" noOfLines={1}>
-                      {getChildName(session.childId)}
-                    </Text>
+                    <Text fontWeight="bold" overflow="hidden" textOverflow="ellipsis" display="-webkit-box" style={{ WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>{getChildName(session.childId)}</Text>
                     <Text>
                       {format(new Date(session.startTime), 'h:mm a')}
                       {session.endTime && ` - ${format(new Date(session.endTime), 'h:mm a')}`}
@@ -165,9 +156,16 @@ export default function Schedule() {
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const { performPush } = useSync();
-  const { isOpen: isSessionModalOpen, onOpen: onSessionModalOpen, onClose: onSessionModalClose } = useDisclosure();
-  const { isOpen: isStartSessionModalOpen, onOpen: onStartSessionModalOpen, onClose: onStartSessionModalClose } = useDisclosure();
+  const { performSync, isOnline } = useSync();
+  const disclosure1 = useDisclosure();
+  const isSessionModalOpen = disclosure1.open;
+  const onSessionModalOpen = disclosure1.onOpen;
+  const onSessionModalClose = disclosure1.onClose;
+  
+  const disclosure2 = useDisclosure();
+  const isStartSessionModalOpen = disclosure2.open;
+  const onStartSessionModalOpen = disclosure2.onOpen;
+  const onStartSessionModalClose = disclosure2.onClose;
   
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [newSession, setNewSession] = useState({
@@ -274,7 +272,7 @@ export default function Schedule() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      performPush('sessions');
+      performSync();
       toast({
         title: 'Session started',
         status: 'success',
@@ -307,7 +305,7 @@ export default function Schedule() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      performPush('sessions');
+      performSync();
       toast({
         title: 'Session ended',
         status: 'success',
@@ -338,7 +336,7 @@ export default function Schedule() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      performPush('sessions');
+      performSync();
       toast({
         title: 'Session updated',
         status: 'success',
@@ -432,7 +430,7 @@ export default function Schedule() {
             <Button
               colorScheme="red"
               onClick={handleEndSession}
-              isLoading={endSessionMutation.isPending}
+              disabled={endSessionMutation.isPending}
               loadingText="Ending..."
             >
               End Shift
@@ -441,7 +439,7 @@ export default function Schedule() {
             <Button
               colorScheme="green"
               onClick={onStartSessionModalOpen}
-              isDisabled={children && children.length === 0}
+              disabled={children && children.length === 0}
             >
               Start Shift
             </Button>
@@ -460,7 +458,7 @@ export default function Schedule() {
             </CardHeader>
             <CardBody>
               {sessions && sessions.find(s => s.id === activeSessionId) && (
-                <Stack spacing={3}>
+                <Stack gap={3}>
                   <Flex justify="space-between">
                     <Text fontWeight="bold">Child:</Text>
                     <Text>{getChildName(sessions.find(s => s.id === activeSessionId)!.childId)}</Text>
@@ -492,7 +490,7 @@ export default function Schedule() {
           </Box>
         ) : (
           <>
-            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8} mb={8}>
+            <SimpleGrid columns={{ base: 1, lg: 2 }} gap={8} mb={8}>
               <Box>
                 {isSessionsLoading || isChildrenLoading ? (
                   <Spinner />
@@ -514,39 +512,49 @@ export default function Schedule() {
                     {isSessionsLoading ? (
                       <Spinner />
                     ) : sessions && sessions.length > 0 ? (
-                      <Table size="sm" variant="simple">
-                        <Thead>
-                          <Tr>
-                            <Th>Date</Th>
-                            <Th>Child</Th>
-                            <Th>Duration</Th>
-                            <Th>Status</Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {sessions.slice(0, 10).map(session => (
-                            <Tr 
-                              key={session.id}
-                              cursor="pointer"
-                              onClick={() => handleViewSession(session)}
-                              _hover={{ bg: 'gray.50' }}
-                            >
-                              <Td>{format(new Date(session.startTime), 'MMM d, yyyy')}</Td>
-                              <Td>{getChildName(session.childId)}</Td>
-                              <Td>
-                                {session.isComplete && session.endTime
-                                  ? formatDuration(session.endTime - session.startTime)
-                                  : 'In progress'}
-                              </Td>
-                              <Td>
-                                <Badge colorScheme={session.isComplete ? 'green' : 'yellow'}>
-                                  {session.isComplete ? 'Completed' : 'Active'}
-                                </Badge>
-                              </Td>
+                      <TableContainer>
+                        <Table size="sm" variant="simple">
+                          <Thead>
+                            <Tr>
+                              <Th>Date</Th>
+                              <Th>Child</Th>
+                              <Th>Start Time</Th>
+                              <Th>End Time</Th>
+                              <Th>Duration</Th>
                             </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
+                          </Thead>
+                          <Tbody>
+                            {sessions.filter(s => s.isComplete).length > 0 ? (
+                              sessions
+                                .filter(s => s.isComplete)
+                                .map(session => (
+                                  <Tr 
+                                    key={session.id}
+                                    cursor="pointer"
+                                    onClick={() => handleViewSession(session)}
+                                    _hover={{ bg: 'gray.50' }}
+                                  >
+                                    <Td>{format(new Date(session.startTime), 'MMM d, yyyy')}</Td>
+                                    <Td>{getChildName(session.childId)}</Td>
+                                    <Td>{format(new Date(session.startTime), 'h:mm a')}</Td>
+                                    <Td>{session.endTime ? format(new Date(session.endTime), 'h:mm a') : '-'}</Td>
+                                    <Td>
+                                      {session.endTime
+                                        ? formatDuration(session.endTime - session.startTime)
+                                        : '-'}
+                                    </Td>
+                                  </Tr>
+                                ))
+                            ) : (
+                              <Tr>
+                                <Td colSpan={5} textAlign="center">
+                                  No completed sessions found.
+                                </Td>
+                              </Tr>
+                            )}
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
                     ) : (
                       <Text textAlign="center">No sessions recorded yet.</Text>
                     )}
@@ -554,61 +562,6 @@ export default function Schedule() {
                 </Card>
               </Box>
             </SimpleGrid>
-
-            <Card>
-              <CardHeader>
-                <Heading size="md">Hours Log</Heading>
-              </CardHeader>
-              <CardBody>
-                <Table size="sm" variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>Date</Th>
-                      <Th>Child</Th>
-                      <Th>Start Time</Th>
-                      <Th>End Time</Th>
-                      <Th>Duration</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {isSessionsLoading ? (
-                      <Tr>
-                        <Td colSpan={5} textAlign="center">
-                          <Spinner />
-                        </Td>
-                      </Tr>
-                    ) : sessions && sessions.filter(s => s.isComplete).length > 0 ? (
-                      sessions
-                        .filter(s => s.isComplete)
-                        .map(session => (
-                          <Tr 
-                            key={session.id}
-                            cursor="pointer"
-                            onClick={() => handleViewSession(session)}
-                            _hover={{ bg: 'gray.50' }}
-                          >
-                            <Td>{format(new Date(session.startTime), 'MMM d, yyyy')}</Td>
-                            <Td>{getChildName(session.childId)}</Td>
-                            <Td>{format(new Date(session.startTime), 'h:mm a')}</Td>
-                            <Td>{session.endTime ? format(new Date(session.endTime), 'h:mm a') : '-'}</Td>
-                            <Td>
-                              {session.endTime
-                                ? formatDuration(session.endTime - session.startTime)
-                                : '-'}
-                            </Td>
-                          </Tr>
-                        ))
-                    ) : (
-                      <Tr>
-                        <Td colSpan={5} textAlign="center">
-                          No completed sessions found.
-                        </Td>
-                      </Tr>
-                    )}
-                  </Tbody>
-                </Table>
-              </CardBody>
-            </Card>
           </>
         )}
       </Box>
@@ -620,13 +573,13 @@ export default function Schedule() {
           <ModalHeader>Start New Session</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Stack spacing={4}>
+            <Stack gap={4}>
               <FormControl isRequired>
                 <FormLabel>Select Child</FormLabel>
                 <Select
                   placeholder="Select a child"
                   value={newSession.childId}
-                  onChange={(e) => setNewSession({
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setNewSession({
                     ...newSession,
                     childId: e.target.value,
                   })}
@@ -643,7 +596,7 @@ export default function Schedule() {
                 <FormLabel>Notes (optional)</FormLabel>
                 <Textarea
                   value={newSession.notes}
-                  onChange={(e) => setNewSession({
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewSession({
                     ...newSession,
                     notes: e.target.value,
                   })}
@@ -659,7 +612,7 @@ export default function Schedule() {
             <Button
               colorScheme="green"
               onClick={handleStartSession}
-              isLoading={startSessionMutation.isPending}
+              disabled={startSessionMutation.isPending}
               loadingText="Starting..."
             >
               Start Session
@@ -676,35 +629,35 @@ export default function Schedule() {
           <ModalCloseButton />
           <ModalBody>
             {selectedSession && (
-              <Stack spacing={5}>
+              <Stack gap={5}>
                 <Flex justify="space-between" align="center">
-                  <Heading size="md">{getChildName(selectedSession.childId)}</Heading>
-                  <Badge colorScheme={selectedSession.isComplete ? 'green' : 'yellow'} fontSize="md" py={1} px={2}>
-                    {selectedSession.isComplete ? 'Completed' : 'In Progress'}
+                  <Heading size="md">{selectedSession && getChildName(selectedSession.childId)}</Heading>
+                  <Badge colorScheme={selectedSession?.isComplete ? 'green' : 'yellow'} fontSize="md" py={1} px={2}>
+                    {selectedSession?.isComplete ? 'Completed' : 'In Progress'}
                   </Badge>
                 </Flex>
 
-                <SimpleGrid columns={2} spacing={4}>
+                <SimpleGrid columns={2} gap={4}>
                   <Box>
                     <Text fontWeight="bold" mb={1}>Date</Text>
-                    <Text>{format(new Date(selectedSession.startTime), 'MMMM d, yyyy')}</Text>
+                    <Text>{selectedSession?.startTime ? format(new Date(selectedSession.startTime), 'MMMM d, yyyy') : '-'}</Text>
                   </Box>
                   <Box>
                     <Text fontWeight="bold" mb={1}>Duration</Text>
                     <Text>
-                      {selectedSession.isComplete && selectedSession.endTime
+                      {selectedSession?.isComplete && selectedSession?.endTime && selectedSession?.startTime
                         ? formatDuration(selectedSession.endTime - selectedSession.startTime)
                         : 'In progress'}
                     </Text>
                   </Box>
                   <Box>
                     <Text fontWeight="bold" mb={1}>Start Time</Text>
-                    <Text>{format(new Date(selectedSession.startTime), 'h:mm a')}</Text>
+                    <Text>{selectedSession?.startTime ? format(new Date(selectedSession.startTime), 'h:mm a') : '-'}</Text>
                   </Box>
                   <Box>
                     <Text fontWeight="bold" mb={1}>End Time</Text>
                     <Text>
-                      {selectedSession.endTime
+                      {selectedSession?.endTime
                         ? format(new Date(selectedSession.endTime), 'h:mm a')
                         : '-'}
                     </Text>
@@ -714,12 +667,16 @@ export default function Schedule() {
                 <FormControl>
                   <FormLabel>Notes</FormLabel>
                   <Textarea
-                    value={selectedSession.notes || ''}
-                    onChange={(e) => setSelectedSession({
-                      ...selectedSession,
-                      notes: e.target.value,
-                    })}
-                    isReadOnly={selectedSession.isComplete}
+                    value={selectedSession?.notes || ''}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                      if (selectedSession) {
+                        setSelectedSession({
+                          ...selectedSession,
+                          notes: e.target.value,
+                        });
+                      }
+                    }}
+                    readOnly={!!selectedSession?.isComplete}
                     placeholder="Add notes about this session..."
                   />
                 </FormControl>
@@ -730,11 +687,11 @@ export default function Schedule() {
             <Button mr={3} onClick={onSessionModalClose}>
               Close
             </Button>
-            {selectedSession && !selectedSession.isComplete && (
+            {selectedSession && !selectedSession?.isComplete && (
               <Button
                 colorScheme="blue"
                 onClick={handleUpdateSession}
-                isLoading={updateSessionMutation.isPending}
+                disabled={updateSessionMutation.isPending}
                 loadingText="Updating..."
               >
                 Update

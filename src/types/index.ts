@@ -136,6 +136,10 @@ export interface Resource {
   isAvailableOffline: boolean;
   createdAt: number;
   updatedAt: number;
+  lastSyncedAt?: number;
+  _syncedAt?: number;
+  _id?: string;
+  _rev?: string;
 }
 
 export interface SyncStatus {

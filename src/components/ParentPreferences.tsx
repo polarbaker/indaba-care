@@ -1,31 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Heading,
-  Text,
-  Stack,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Switch,
-  Textarea,
-  Flex,
-  Divider,
-  useToast,
-  Card,
-  CardHeader,
-  CardBody,
-  FormErrorMessage,
-  Select,
-  IconButton,
-  VStack,
-  HStack,
-  CloseButton,
-  Tag,
-  TagLabel,
-  TagCloseButton,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import { Input } from '@chakra-ui/input';
+import { Button } from '@chakra-ui/button';
+import { Textarea } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/layout';
+import { IconButton } from '@chakra-ui/button';
+import { CloseButton } from '@chakra-ui/close-button';
+// Import Chakra UI components from their specific packages
+import { Stack, VStack, HStack } from '@chakra-ui/layout';
+import { Select } from '@chakra-ui/select';
+import { Divider } from '@chakra-ui/layout';
+import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/form-control';
+// Import Switch from main package since specific package is not available
+import { Switch } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/toast';
+import { Card, CardHeader, CardBody } from '@chakra-ui/card';
+import { Tag, TagLabel, TagCloseButton } from '@chakra-ui/tag';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { familyDB } from '../lib/db';
 import { Family, ParentPreferences } from '../types';
@@ -43,7 +35,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
   
   const toast = useToast();
   const queryClient = useQueryClient();
-  const { performPush } = useSync();
+  const { performSync } = useSync();
   
   // Update the local state when the family changes
   useEffect(() => {
@@ -73,7 +65,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
         duration: 3000,
       });
       // Attempt to sync with the server
-      performPush('families');
+      performSync();
     },
     onError: (error) => {
       toast({
@@ -195,7 +187,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
               <FormLabel>Preferred Language</FormLabel>
               <Select
                 value={preferences.languagePreference}
-                onChange={(e) => setPreferences({
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setPreferences({
                   ...preferences,
                   languagePreference: e.target.value,
                 })}
@@ -213,29 +205,41 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
             <Stack spacing={3} mb={4}>
               <FormControl display="flex" alignItems="center">
                 <FormLabel mb="0">Email Notifications</FormLabel>
-                <Switch
-                  isChecked={preferences.notificationPreferences.email}
-                  onChange={() => handleToggleNotification('email')}
-                  colorScheme="blue"
-                />
+                <Box as="label" display="flex" alignItems="center">
+                  <input 
+                    type="checkbox" 
+                    checked={preferences.notificationPreferences.email}
+                    onChange={() => handleToggleNotification('email')}
+                    style={{ marginRight: '8px' }}
+                  />
+                  <Text fontSize="sm">Enable</Text>
+                </Box>
               </FormControl>
               
               <FormControl display="flex" alignItems="center">
                 <FormLabel mb="0">Push Notifications</FormLabel>
-                <Switch
-                  isChecked={preferences.notificationPreferences.push}
-                  onChange={() => handleToggleNotification('push')}
-                  colorScheme="blue"
-                />
+                <Box as="label" display="flex" alignItems="center">
+                  <input 
+                    type="checkbox" 
+                    checked={preferences.notificationPreferences.push}
+                    onChange={() => handleToggleNotification('push')}
+                    style={{ marginRight: '8px' }}
+                  />
+                  <Text fontSize="sm">Enable</Text>
+                </Box>
               </FormControl>
               
               <FormControl display="flex" alignItems="center">
                 <FormLabel mb="0">SMS Notifications</FormLabel>
-                <Switch
-                  isChecked={preferences.notificationPreferences.sms}
-                  onChange={() => handleToggleNotification('sms')}
-                  colorScheme="blue"
-                />
+                <Box as="label" display="flex" alignItems="center">
+                  <input 
+                    type="checkbox" 
+                    checked={preferences.notificationPreferences.sms}
+                    onChange={() => handleToggleNotification('sms')}
+                    style={{ marginRight: '8px' }}
+                  />
+                  <Text fontSize="sm">Enable</Text>
+                </Box>
               </FormControl>
             </Stack>
           </Box>
@@ -281,7 +285,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                   <Input
                     size="sm"
                     value={newContact.name}
-                    onChange={(e) => setNewContact({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setNewContact({
                       ...newContact,
                       name: e.target.value,
                     })}
@@ -293,7 +297,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                   <Input
                     size="sm"
                     value={newContact.relationship}
-                    onChange={(e) => setNewContact({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setNewContact({
                       ...newContact,
                       relationship: e.target.value,
                     })}
@@ -305,7 +309,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                   <Input
                     size="sm"
                     value={newContact.phone}
-                    onChange={(e) => setNewContact({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setNewContact({
                       ...newContact,
                       phone: e.target.value,
                     })}
@@ -344,7 +348,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
               <Flex>
                 <Input
                   value={newAllergy}
-                  onChange={(e) => setNewAllergy(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setNewAllergy(e.target.value)}
                   placeholder="Add an allergy"
                   mr={2}
                 />
@@ -372,7 +376,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
               <Flex>
                 <Input
                   value={newDietaryRestriction}
-                  onChange={(e) => setNewDietaryRestriction(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setNewDietaryRestriction(e.target.value)}
                   placeholder="Add a dietary restriction"
                   mr={2}
                 />
@@ -388,7 +392,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
               <FormLabel>Additional Notes</FormLabel>
               <Textarea
                 value={preferences.additionalNotes || ''}
-                onChange={(e) => setPreferences({
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPreferences({
                   ...preferences,
                   additionalNotes: e.target.value,
                 })}

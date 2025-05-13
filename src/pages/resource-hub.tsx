@@ -5,21 +5,17 @@ import {
   Heading,
   Text,
   SimpleGrid,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
   Button,
   Image,
   Badge,
-  Stack,
   Skeleton,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Flex,
-  Select,
 } from '@chakra-ui/react';
+// Import components from their specific packages
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/card';
+import { Stack } from '@chakra-ui/layout';
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
+import { Select } from '@chakra-ui/select';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/tabs';
 import { Tag, TagLeftIcon, TagLabel } from '@chakra-ui/tag';
 import { useColorModeValue } from '@chakra-ui/color-mode';
@@ -84,7 +80,8 @@ export default function ResourceHub() {
         resourceDB.put({
           ...data,
           _id: doc.id,
-          lastSyncedAt: Date.now(),
+          // Add sync metadata
+          _syncedAt: Date.now()
         }).catch(error => {
           // Ignore document update conflicts
           if (error.name !== 'conflict') {
@@ -190,7 +187,7 @@ export default function ResourceHub() {
           <Skeleton height="20px" width="500px" mb={10} />
           <Tabs>
             <Skeleton height="40px" mb={5} />
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
               <Skeleton height="300px" />
               <Skeleton height="300px" />
               <Skeleton height="300px" />
@@ -221,16 +218,23 @@ export default function ResourceHub() {
         <Flex mb={6} direction={{ base: 'column', md: 'row' }} gap={4}>
           <InputGroup maxW={{ base: '100%', md: '60%' }}>
             <InputLeftElement pointerEvents="none">
-              <Box 
-                as="svg" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                w={5} 
-                h={5}
+              <Box
                 color="gray.400"
+                role="img"
+                aria-label="search"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  width="20px"
+                  height="20px"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </Box>
             </InputLeftElement>
             <Input
@@ -283,13 +287,13 @@ export default function ResourceHub() {
             {/* All Resources Tab */}
             <TabPanel p={0}>
               {isResourcesLoading ? (
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                   <Skeleton height="300px" />
                   <Skeleton height="300px" />
                   <Skeleton height="300px" />
                 </SimpleGrid>
               ) : filteredResources.length > 0 ? (
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                   {filteredResources.map((resource) => (
                     <ResourceCard 
                       key={resource.id} 
@@ -316,12 +320,12 @@ export default function ResourceHub() {
             {RESOURCE_CATEGORIES.map((category, index) => (
               <TabPanel key={category.id} p={0}>
                 {isResourcesLoading ? (
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                     <Skeleton height="300px" />
                     <Skeleton height="300px" />
                   </SimpleGrid>
                 ) : getTabResources(index + 1).length > 0 ? (
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                     {getTabResources(index + 1).map((resource) => (
                       <ResourceCard 
                         key={resource.id} 
@@ -414,7 +418,9 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
 
       <CardHeader pb={2}>
         <Flex justify="space-between" align="flex-start">
-          <Heading size="md" noOfLines={2}>{resource.title}</Heading>
+          <Heading size="md" title={resource.title}>
+            <Text as="span" overflow="hidden" textOverflow="ellipsis" display="-webkit-box" style={{ WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{resource.title}</Text>
+          </Heading>
           {resource.isAvailableOffline && (
             <Badge colorScheme="green" variant="outline">
               Offline
@@ -427,13 +433,13 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
         <Tag size="sm" colorScheme="blue" mb={3}>
           <TagLabel>{getCategoryName(resource.category)}</TagLabel>
         </Tag>
-        <Text noOfLines={3} fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="gray.600" overflow="hidden" textOverflow="ellipsis" display="-webkit-box" style={{ WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
           {resource.description}
         </Text>
       </CardBody>
 
       <CardFooter pt={0}>
-        <Stack direction="row" spacing={2} width="100%">
+        <Stack direction="row" gap={2} width="100%">
           <Button
             flex={1}
             variant="solid"
@@ -447,7 +453,7 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
             variant="outline"
             size="sm"
             onClick={() => onMarkOffline(resource)}
-            isDisabled={isOffline}
+            disabled={isOffline}
           >
             {resource.isAvailableOffline ? 'Remove Offline' : 'Save Offline'}
           </Button>

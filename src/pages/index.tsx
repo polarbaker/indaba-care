@@ -7,10 +7,10 @@ import {
   Text, 
   Button, 
   Container,
-  Stack,
-  Image,
-  useColorModeValue
+  Image
 } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/layout';
+import { useColorModeValue } from '@chakra-ui/color-mode';
 import { useAuthContext } from '../contexts/AuthContext';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
@@ -48,7 +48,7 @@ export default function Home() {
             {t('app.name')}
           </Heading>
           
-          <Stack direction="row" spacing={4}>
+          <Stack direction="row" gap={4}>
             <Button 
               variant="ghost" 
               colorScheme="blue" 
@@ -91,7 +91,7 @@ export default function Home() {
                 and more—all with a seamless offline-first experience.
               </Text>
               
-              <Stack direction={{ base: 'column', sm: 'row' }} spacing={4}>
+              <Stack direction={{ base: 'column', sm: 'row' }} gap={4}>
                 <Button 
                   size="lg" 
                   colorScheme="blue" 
@@ -119,7 +119,6 @@ export default function Home() {
               <Image
                 src="/hero-image.png"
                 alt="Indaba Care App Screenshot"
-                fallbackSrc="https://via.placeholder.com/600x400?text=Indaba+Care"
               />
             </Box>
           </Flex>
@@ -131,7 +130,7 @@ export default function Home() {
             
             <Stack 
               direction={{ base: 'column', md: 'row' }}
-              spacing={8}
+              gap={8}
               justify="center"
               wrap="wrap"
             >
@@ -179,24 +178,24 @@ export default function Home() {
             
             <Stack 
               direction={{ base: 'column', sm: 'row' }}
-              spacing={{ base: 4, sm: 8 }}
+              gap={{ base: 4, sm: 8 }}
               align={{ base: 'center', sm: 'flex-start' }}
             >
-              <Stack spacing={2}>
+              <Stack gap={2}>
                 <Text fontWeight="bold" mb={1}>Product</Text>
                 <Text color="gray.600" fontSize="sm">Features</Text>
                 <Text color="gray.600" fontSize="sm">Security</Text>
                 <Text color="gray.600" fontSize="sm">Privacy</Text>
               </Stack>
               
-              <Stack spacing={2}>
+              <Stack gap={2}>
                 <Text fontWeight="bold" mb={1}>Support</Text>
                 <Text color="gray.600" fontSize="sm">Help Center</Text>
                 <Text color="gray.600" fontSize="sm">Contact Us</Text>
                 <Text color="gray.600" fontSize="sm">FAQs</Text>
               </Stack>
               
-              <Stack spacing={2}>
+              <Stack gap={2}>
                 <Text fontWeight="bold" mb={1}>Company</Text>
                 <Text color="gray.600" fontSize="sm">About Us</Text>
                 <Text color="gray.600" fontSize="sm">Careers</Text>

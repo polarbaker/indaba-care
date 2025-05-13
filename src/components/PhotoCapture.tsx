@@ -1,19 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  Flex,
-  Text,
-  AspectRatio,
-  Spinner,
-  Image,
-  Input
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/button';
+import { Flex } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import { Image } from '@chakra-ui/image';
+import { Input } from '@chakra-ui/input';
+import { Spinner } from '@chakra-ui/spinner';
+import { useColorModeValue } from '@chakra-ui/color-mode';
 import { IconButton } from '@chakra-ui/button';
-import { Stack } from '@chakra-ui/layout';
+import { Stack, AspectRatio } from '@chakra-ui/layout';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { useToast } from '@chakra-ui/toast';
-import { useColorModeValue } from '@chakra-ui/color-mode';
 import { useAuthContext } from '../contexts/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/router';
@@ -246,9 +243,10 @@ export default function PhotoCapture({ childId, onPhotoTaken }: PhotoCaptureProp
                 <IconButton
                   aria-label="Capture Photo"
                   icon={<span role="img" aria-label="camera">📸</span>}
+                  isRound
                   size="lg"
                   colorScheme="blue"
-                  borderRadius="full"
+
                   onClick={capturePhoto}
                 />
               </Flex>
@@ -288,14 +286,14 @@ export default function PhotoCapture({ childId, onPhotoTaken }: PhotoCaptureProp
                 <Button
                   variant="outline"
                   onClick={discardPhoto}
-                  disabled={isProcessing}
+                  isDisabled={isProcessing}
                 >
                   Discard
                 </Button>
                 <Button
                   colorScheme="blue"
                   onClick={savePhoto}
-                  disabled={isProcessing}
+                  isDisabled={isProcessing}
                 >
                   Save Photo
                 </Button>

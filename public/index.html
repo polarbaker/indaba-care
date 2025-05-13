@@ -3,101 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Indaba Care - Coming Soon</title>
+  <title>Indaba Care - Childcare Management Platform</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f0f5ff;
+      color: #333;
+      line-height: 1.6;
       margin: 0;
       padding: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
-      background-color: #f5f7fa;
-      color: #2d3748;
     }
     .container {
       max-width: 800px;
       padding: 2rem;
       text-align: center;
-      background: white;
+      background-color: white;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     h1 {
-      color: #4299e1;
-      font-size: 2.5rem;
+      color: #2c5282;
       margin-bottom: 1rem;
+    }
+    p {
+      margin-bottom: 2rem;
     }
     .logo {
       font-size: 3rem;
+      color: #4299e1;
       margin-bottom: 1rem;
-    }
-    .description {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #4a5568;
-      margin-bottom: 2rem;
     }
     .features {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      justify-content: space-around;
+      margin: 2rem 0;
     }
     .feature {
-      flex: 1 1 200px;
-      padding: 1rem;
+      flex: 1 1 300px;
+      margin: 1rem;
+      padding: 1.5rem;
       background-color: #ebf8ff;
       border-radius: 8px;
     }
-    .feature-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
+    .feature h3 {
+      color: #2b6cb0;
     }
-    .coming-soon {
-      margin-top: 2rem;
-      padding: 0.5rem 1rem;
+    .cta-button {
+      display: inline-block;
       background-color: #4299e1;
       color: white;
-      border-radius: 5px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      text-decoration: none;
       font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .cta-button:hover {
+      background-color: #2b6cb0;
+    }
+    @media (max-width: 768px) {
+      .container {
+        width: 90%;
+        padding: 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo">👶</div>
+    <div class="logo">👨‍👩‍👧‍👦</div>
     <h1>Indaba Care</h1>
-    <p class="description">
-      A comprehensive childcare management platform with offline-first capabilities, 
-      designed to help families and caregivers track child development, health, and activities.
-    </p>
+    <p>Your comprehensive childcare management platform with offline capabilities</p>
+    
     <div class="features">
       <div class="feature">
-        <div class="feature-icon">📱</div>
-        <h3>Offline-First</h3>
-        <p>Access and update information even without an internet connection.</p>
+        <h3>Family Management</h3>
+        <p>Track children's activities, milestones, and schedules in one place. Stay connected with caregivers and keep important information organized.</p>
       </div>
       <div class="feature">
-        <div class="feature-icon">🔄</div>
-        <h3>Sync Everywhere</h3>
-        <p>Seamlessly synchronize data across devices when back online.</p>
+        <h3>Resource Hub</h3>
+        <p>Access helpful articles, videos, and checklists for parents and caregivers. Save resources for offline viewing when you need them most.</p>
       </div>
       <div class="feature">
-        <div class="feature-icon">📊</div>
-        <h3>Track Progress</h3>
-        <p>Monitor milestones, activities, and health records in one place.</p>
+        <h3>Offline Access</h3>
+        <p>Work seamlessly even without internet connection. All your data syncs automatically when you're back online.</p>
       </div>
     </div>
-    <div class="coming-soon">
-      Full Application Coming Soon
+    
+    <div class="feature">
+      <h3>Key Benefits</h3>
+      <ul style="text-align: left;">
+        <li>Secure data storage with Firebase authentication</li>
+        <li>Automatic synchronization between devices</li>
+        <li>Photo capturing and milestone tracking</li>
+        <li>Schedule management for families and caregivers</li>
+        <li>Multilingual support for diverse communities</li>
+      </ul>
     </div>
-    <p>
-      Firebase deployment is working! Continue developing the application locally.
-    </p>
+    <p><strong>Coming Soon!</strong> We're working hard to bring you the full application experience.</p>
+    
+    <a href="https://github.com/polarbaker/indaba-care" class="cta-button">View on GitHub</a>
   </div>
 </body>
 </html>

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  SimpleGrid,
-  Button,
-  Stack,
-  Badge,
-  IconButton,
-  Skeleton,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/layout';
+import { Heading } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/button';
+import { IconButton } from '@chakra-ui/button';
+// Import specific Chakra UI components from their packages
+import { SimpleGrid } from '@chakra-ui/layout';
+import { Stack } from '@chakra-ui/layout';
+import { Badge } from '@chakra-ui/layout';
+// Import Skeleton from the main package as it may not have a separate package
+import { Skeleton } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/toast';
 // Import specific Chakra UI components from their packages
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/card';

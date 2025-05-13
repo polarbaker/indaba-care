@@ -76,20 +76,22 @@ export const pullData = async (entity: string): Promise<number> => {
       try {
         // Try to get existing document to preserve _rev for update
         const localDoc = await db.get(docSnapshot.id);
+        // Type assertion to fix TypeScript errors with PouchDB
         await db.put({
           ...remoteData,
           _id: docSnapshot.id,
           _rev: localDoc._rev,
           lastSyncedAt: Date.now(),
-        });
+        } as any);
       } catch (error: any) {
         // Document doesn't exist locally, create it
         if (error.name === 'not_found') {
+          // Type assertion to fix TypeScript errors with PouchDB
           await db.put({
             ...remoteData,
             _id: docSnapshot.id,
             lastSyncedAt: Date.now(),
-          });
+          } as any);
         } else {
           console.error(`Error syncing ${entity} document:`, error);
         }
@@ -136,12 +138,15 @@ export const pushData = async (entity: string): Promise<number> => {
     // Use batched writes for efficiency
     const batch = writeBatch(firestore);
     
-    docsToSync.forEach(doc => {
-      if (!doc) return;
+    docsToSync.forEach(docObj => {
+      if (!docObj) return;
       
-      // Clean up PouchDB specific fields
-      const { _id, _rev, lastSyncedAt, ...cleanDoc } = doc;
-      const docRef = doc_(firestore, collectionName, _id);
+      // Clean up PouchDB specific fields and use type assertion to overcome TypeScript limitations
+      const docData = docObj as any;
+      const { _id, _rev, lastSyncedAt, ...cleanDoc } = docData;
+      
+      // Create document reference with the cleaned ID
+      const docRef = doc(firestore, collectionName, String(_id));
       
       // Add server timestamp
       batch.set(docRef, {
@@ -156,10 +161,11 @@ export const pushData = async (entity: string): Promise<number> => {
     for (const doc of docsToSync) {
       if (!doc) continue;
       
+      // Type assertion to fix TypeScript errors related to PouchDB
       await db.put({
         ...doc,
         lastSyncedAt: Date.now(),
-      });
+      } as any);
     }
     
     return docsToSync.length;

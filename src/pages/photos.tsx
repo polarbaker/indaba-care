@@ -1,38 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Heading,
-  Text,
-  Button,
-  SimpleGrid,
-  Flex,
-  Stack,
-  Card,
-  CardBody,
-  Image,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  Textarea,
-  useToast,
-  AspectRatio,
-  IconButton,
-  Badge,
-  Spinner,
-  Alert,
-  AlertIcon,
-  Center,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/button';
+import { Flex } from '@chakra-ui/layout';
+import { Image } from '@chakra-ui/image';
+import { Input } from '@chakra-ui/input';
+import { Textarea } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/button';
+import { Badge } from '@chakra-ui/layout';
+import { Spinner } from '@chakra-ui/spinner';
+import { Center } from '@chakra-ui/layout';
+import { useDisclosure } from '@chakra-ui/react';
+
+// Import components from specific packages
+import { SimpleGrid } from '@chakra-ui/layout';
+import { Stack } from '@chakra-ui/layout';
+import { Card, CardBody } from '@chakra-ui/card';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton } from '@chakra-ui/modal';
+import { FormControl, FormLabel } from '@chakra-ui/form-control';
+import { Select } from '@chakra-ui/select';
+import { useToast } from '@chakra-ui/toast';
+import { AspectRatio } from '@chakra-ui/layout';
+import { Alert, AlertIcon } from '@chakra-ui/alert';
 import Layout from '../components/Layout';
 import { useAuthContext } from '../contexts/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -47,9 +38,16 @@ export default function Photos() {
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const { isOnline, performPush } = useSync();
-  const { isOpen: isCaptureModalOpen, onOpen: onCaptureModalOpen, onClose: onCaptureModalClose } = useDisclosure();
-  const { isOpen: isViewModalOpen, onOpen: onViewModalOpen, onClose: onViewModalClose } = useDisclosure();
+  const { isOnline, performSync } = useSync();
+  const captureModalDisclosure = useDisclosure();
+  const isCaptureModalOpen = captureModalDisclosure.open;
+  const onCaptureModalOpen = captureModalDisclosure.onOpen;
+  const onCaptureModalClose = captureModalDisclosure.onClose;
+  
+  const viewModalDisclosure = useDisclosure();
+  const isViewModalOpen = viewModalDisclosure.open;
+  const onViewModalOpen = viewModalDisclosure.onOpen;
+  const onViewModalClose = viewModalDisclosure.onClose;
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [selectedChild, setSelectedChild] = useState('');
@@ -171,7 +169,7 @@ export default function Photos() {
       
       // Try to push to Firestore if online
       if (isOnline) {
-        performPush('photos');
+        performSync();
         uploadQueuedPhotos();
       }
     },
@@ -281,7 +279,7 @@ export default function Photos() {
           <Button
             colorScheme="blue"
             onClick={onCaptureModalOpen}
-            isDisabled={children && children.length === 0}
+            disabled={children && children.length === 0}
           >
             Upload Photo
           </Button>
@@ -334,7 +332,7 @@ export default function Photos() {
                 
                 <CardBody py={3}>
                   <Flex justify="space-between" align="center" mb={1}>
-                    <Text fontWeight="medium" fontSize="sm" noOfLines={1}>
+                    <Text fontWeight="bold" fontSize="sm" noOfLines={2} overflow="hidden" textOverflow="ellipsis">
                       {getChildName(photo.childId)}
                     </Text>
                     
@@ -351,7 +349,7 @@ export default function Photos() {
                   </Text>
                   
                   {photo.caption && (
-                    <Text fontSize="sm" mt={1} noOfLines={2}>
+                    <Text fontSize="sm" mt={1} noOfLines={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                       {photo.caption}
                     </Text>
                   )}
@@ -413,7 +411,7 @@ export default function Photos() {
                 <FormLabel>Caption (optional)</FormLabel>
                 <Textarea
                   value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCaption(e.target.value)}
                   placeholder="Add a caption to this photo..."
                 />
               </FormControl>
@@ -426,7 +424,7 @@ export default function Photos() {
             <Button
               colorScheme="blue"
               onClick={handleCapturePhoto}
-              isLoading={capturePhotoMutation.isPending}
+              isLoading={capturePhotoMutation.isPending ? true : false}
               loadingText="Saving..."
               isDisabled={!imagePreview || !selectedChild}
             >

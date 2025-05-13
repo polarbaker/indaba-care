@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Select, Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
+// @ts-ignore - Import Select separately to fix TypeScript errors
+import { Select } from '@chakra-ui/select';
 import { useTranslation } from 'next-i18next';
 
 interface Language {

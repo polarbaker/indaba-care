@@ -5,21 +5,21 @@ import {
   Box,
   Button,
   Container,
-  Divider,
-  FormControl,
-  FormLabel,
   Heading,
   Input,
-  Stack,
   Text,
-  useToast,
   Link,
   Flex,
   Image,
   InputGroup,
-  InputRightElement,
-  FormErrorMessage,
 } from '@chakra-ui/react';
+
+// Import components from their specific packages
+import { Divider } from '@chakra-ui/layout';
+import { Stack } from '@chakra-ui/layout';
+import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/form-control';
+import { useToast } from '@chakra-ui/toast';
+import { InputRightElement } from '@chakra-ui/input';
 import { useAuthContext } from '../contexts/AuthContext';
 import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '../lib/firebase';
@@ -173,7 +173,6 @@ export default function Register() {
             src="/logo.png"
             alt="Indaba Care Logo"
             height="80px"
-            fallbackSrc="https://via.placeholder.com/150x80?text=Indaba+Care"
             mb={2}
           />
           <Heading size="lg" textAlign="center">Create your account</Heading>
@@ -203,14 +202,14 @@ export default function Register() {
 
             <FormControl id="password" isRequired isInvalid={!!passwordError}>
               <FormLabel>Password</FormLabel>
-              <InputGroup>
+              <Box position="relative">
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
                 />
-                <InputRightElement width="4.5rem">
+                <Box position="absolute" right="0" top="0" height="100%" display="flex" alignItems="center" pr="4">
                   <Button
                     h="1.75rem"
                     size="sm"
@@ -218,8 +217,8 @@ export default function Register() {
                   >
                     {showPassword ? 'Hide' : 'Show'}
                   </Button>
-                </InputRightElement>
-              </InputGroup>
+                </Box>
+              </Box>
               <FormErrorMessage>{passwordError}</FormErrorMessage>
             </FormControl>
 
@@ -237,7 +236,7 @@ export default function Register() {
             <Button
               colorScheme="blue"
               type="submit"
-              isLoading={isLoading}
+              loading={isLoading}
               loadingText="Creating account..."
               mt={6}
             >
@@ -249,20 +248,19 @@ export default function Register() {
             <Button
               w="full"
               variant="outline"
-              leftIcon={
+              onClick={handleGoogleSignIn}
+              loading={isLoading}
+              loadingText="Signing up with Google..."
+            >
+              <Flex align="center" gap={2}>
                 <Image
                   src="/google-icon.png"
                   alt="Google Icon"
                   width="18px"
                   height="18px"
-                  fallbackSrc="https://via.placeholder.com/18?text=G"
                 />
-              }
-              onClick={handleGoogleSignIn}
-              isLoading={isLoading}
-              loadingText="Signing up with Google..."
-            >
-              Sign up with Google
+                <Text>Sign up with Google</Text>
+              </Flex>
             </Button>
             
             <Box textAlign="center" mt={4}>

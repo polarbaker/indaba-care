@@ -1,6 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// Import ChakraProvider, but we'll mock it below
 import { ChakraProvider } from '@chakra-ui/react';
+
+// Mock ChakraProvider to avoid TypeScript errors in tests
+jest.mock('@chakra-ui/react', () => ({
+  ...jest.requireActual('@chakra-ui/react'),
+  ChakraProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
 import FeedbackButton from '../../src/components/FeedbackButton';
 
 // Mock PouchDB implementation
@@ -25,9 +32,7 @@ describe('FeedbackButton Component', () => {
 
   test('renders correctly', () => {
     render(
-      <ChakraProvider>
-        <FeedbackButton />
-      </ChakraProvider>
+      <FeedbackButton />
     );
     
     expect(screen.getByRole('button', { name: /feedback/i })).toBeInTheDocument();
@@ -35,9 +40,7 @@ describe('FeedbackButton Component', () => {
 
   test('opens modal when clicked', () => {
     render(
-      <ChakraProvider>
-        <FeedbackButton />
-      </ChakraProvider>
+      <FeedbackButton />
     );
     
     // Click the feedback button
@@ -53,9 +56,7 @@ describe('FeedbackButton Component', () => {
 
   test('submits feedback correctly', async () => {
     render(
-      <ChakraProvider>
-        <FeedbackButton />
-      </ChakraProvider>
+      <FeedbackButton />
     );
     
     // Open the modal
@@ -94,9 +95,7 @@ describe('FeedbackButton Component', () => {
 
   test('validates form before submission', async () => {
     render(
-      <ChakraProvider>
-        <FeedbackButton />
-      </ChakraProvider>
+      <FeedbackButton />
     );
     
     // Open the modal
@@ -125,9 +124,7 @@ describe('FeedbackButton Component', () => {
     });
     
     render(
-      <ChakraProvider>
-        <FeedbackButton />
-      </ChakraProvider>
+      <FeedbackButton />
     );
     
     // Open the modal

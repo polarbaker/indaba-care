@@ -32,7 +32,8 @@ const TestComponent = () => {
   
   const handleSignUp = async () => {
     try {
-      await signUp('test@example.com', 'password123', 'Test User');
+      // Removed third parameter as signUp only expects email and password
+      await signUp('test@example.com', 'password123');
     } catch (error) {
       console.error(error);
     }

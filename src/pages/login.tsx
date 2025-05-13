@@ -1,31 +1,28 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Stack,
-  Text,
-  useToast,
-  Link,
-  Flex,
-  Image,
-  InputGroup,
-  InputRightElement,
-  IconButton,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/button';
+import { Container } from '@chakra-ui/layout';
+import { Heading } from '@chakra-ui/layout';
+import { Input } from '@chakra-ui/input';
+import { Text } from '@chakra-ui/layout';
+import { Link } from '@chakra-ui/layout';
+import { Flex } from '@chakra-ui/layout';
+import { Image } from '@chakra-ui/image';
+import { IconButton } from '@chakra-ui/button';
+// Import specific components from their packages
+import { Divider } from '@chakra-ui/layout';
+import { FormControl, FormLabel } from '@chakra-ui/form-control';
+import { Stack } from '@chakra-ui/layout';
+import { useToast } from '@chakra-ui/toast';
+import { InputGroup, InputRightElement } from '@chakra-ui/input';
 import { useAuthContext } from '../contexts/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { signIn, signInWithGoogle } = useAuthContext();
   const router = useRouter();
@@ -91,7 +88,7 @@ export default function Login() {
             src="/logo.png"
             alt="Indaba Care Logo"
             height="80px"
-            fallbackSrc="https://via.placeholder.com/150x80?text=Indaba+Care"
+            // fallbackSrc prop removed
             mb={2}
           />
           <Heading size="lg" textAlign="center">Welcome back</Heading>
@@ -140,7 +137,7 @@ export default function Login() {
               <Button
                 colorScheme="blue"
                 type="submit"
-                isLoading={isLoading}
+                isLoading={loading}
                 loadingText="Logging in..."
               >
                 Log in
@@ -152,20 +149,19 @@ export default function Login() {
             <Button
               w="full"
               variant="outline"
-              leftIcon={
+              onClick={handleGoogleSignIn}
+              isLoading={loading}
+              loadingText="Signing in with Google..."
+            >
+              <Flex alignItems="center" gap={2}>
                 <Image
                   src="/google-icon.png"
                   alt="Google Icon"
                   width="18px"
                   height="18px"
-                  fallbackSrc="https://via.placeholder.com/18?text=G"
                 />
-              }
-              onClick={handleGoogleSignIn}
-              isLoading={isLoading}
-              loadingText="Signing in with Google..."
-            >
-              Continue with Google
+                <Text>Continue with Google</Text>
+              </Flex>
             </Button>
             
             <Box textAlign="center" mt={4}>

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Card,
   CardBody,
   CardFooter,
   CardHeader,
@@ -10,14 +9,22 @@ import {
   Badge,
   Stack,
   Flex,
-  Avatar,
   Button,
-  Divider,
   List,
   ListItem,
-  ListIcon,
-  useColorModeValue,
 } from '@chakra-ui/react';
+
+// Import specific components from their packages
+import { Divider } from '@chakra-ui/layout';
+import { useColorModeValue } from '@chakra-ui/system';
+
+// Use separate imports for components with namespace issues
+// @ts-ignore
+import { Card } from '@chakra-ui/card';
+// @ts-ignore
+import { Avatar } from '@chakra-ui/avatar';
+// @ts-ignore
+import { ListIcon } from '@chakra-ui/list';
 import { Child } from '../types';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
@@ -75,7 +82,7 @@ export default function ChildProfileCard({ child, isDetailed = false }: ChildPro
       w="100%"
     >
       <CardHeader pb={isDetailed ? 4 : 2}>
-        <Flex spacing="4">
+        <Flex gap="4">
           <Avatar 
             name={child.name} 
             size={isDetailed ? "lg" : "md"} 
@@ -97,7 +104,7 @@ export default function ChildProfileCard({ child, isDetailed = false }: ChildPro
       </CardHeader>
       
       <CardBody py={isDetailed ? 4 : 2}>
-        <Stack spacing={isDetailed ? 4 : 2}>
+        <Stack gap={isDetailed ? 4 : 2}>
           {isDetailed && (
             <>
               <Box>
@@ -160,7 +167,7 @@ export default function ChildProfileCard({ child, isDetailed = false }: ChildPro
               
               <Flex justify="space-between" fontSize="sm">
                 <Text fontWeight="medium">Schedule:</Text>
-                <Text noOfLines={1} maxW="60%">
+                <Text maxW="60%" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                   {child.schedule ? `${child.schedule.regularDays.length} days/week` : 'Not set'}
                 </Text>
               </Flex>
@@ -168,7 +175,7 @@ export default function ChildProfileCard({ child, isDetailed = false }: ChildPro
               {child.medicalInfo?.allergies && child.medicalInfo.allergies.length > 0 && (
                 <Flex justify="space-between" fontSize="sm">
                   <Text fontWeight="medium" color="red.500">Allergies:</Text>
-                  <Text noOfLines={1} maxW="60%">
+                  <Text maxW="60%" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                     {child.medicalInfo.allergies.join(', ')}
                   </Text>
                 </Flex>
