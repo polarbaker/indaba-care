@@ -21,12 +21,12 @@ Indaba Care is a mobile-first application designed to help parents and nannies m
 
 This Wiki serves as the central knowledge base for the Indaba Care project. Here's what you'll find:
 
-* [Getting Started](./Getting-Started) - Set up your development environment
-* [Architecture](./Architecture) - Understand how our system works
-* [Firebase Setup](./Firebase-Setup) - Details about our Firebase configuration
-* [Design System](./Design-System) - UI/UX guidelines and components
-* [Non-Technical Guides](./Non-Technical-Guides) - For team members without coding experience
-* [Deployment](./Deployment) - How we deploy and maintain the application
+* [Getting Started](https://github.com/polarbaker/indaba-care/blob/main/SETUP_ENV.md) - Set up your development environment
+* [Architecture](https://github.com/polarbaker/indaba-care/blob/main/README.md) - Understand how our system works
+* [Firebase Setup](https://github.com/polarbaker/indaba-care/blob/main/.env.demo) - Details about our Firebase configuration
+* [Design System](https://github.com/polarbaker/indaba-care/blob/main/UI_UX_DESIGN_GUIDE.md) - UI/UX guidelines and components
+* [Non-Technical Guides](https://github.com/polarbaker/indaba-care/blob/main/INDABA_CARE_VISUAL_GUIDE_FOR_NONTECHNICAL_TEAM.md) - For team members without coding experience
+* [GitHub for Designers](https://github.com/polarbaker/indaba-care/blob/main/GITHUB_FOR_DESIGNERS.md) - Using GitHub without coding knowledge
 
 ## For New Team Members
 
@@ -34,9 +34,9 @@ Welcome to the Indaba Care team! 👋
 
 If you're new here, we recommend starting with these resources:
 
-1. [Project Overview](./Project-Overview) - Understand our mission and goals
-2. [Environment Setup](./Environment-Setup) - Get your local development environment running
-3. [Your First Contribution](./Your-First-Contribution) - Step-by-step guide to making your first change
+1. [Project Overview](https://github.com/polarbaker/indaba-care/blob/main/README.md) - Understand our mission and goals
+2. [Environment Setup](https://github.com/polarbaker/indaba-care/blob/main/SETUP_ENV.md) - Get your local development environment running
+3. [Your First Contribution](https://github.com/polarbaker/indaba-care/blob/main/GITHUB_FOR_DESIGNERS.md) - Step-by-step guide to making your first change
 
 ## Additional Resources
 
