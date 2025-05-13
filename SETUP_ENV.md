@@ -51,6 +51,8 @@ FIREBASE_AUTH_EMULATOR_HOST=localhost:9099
 FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199
 ```
 
+**⚠️ IMPORTANT NOTE:** The cloud Firebase Storage has not been set up yet due to region compatibility issues. Junior developers MUST use the Firebase Storage emulator for photo upload functionality. Cloud Storage will be configured properly before production.
+
 ### Option 3: Create your own Firebase project
 
 For a fully-functional application with your own data:
