@@ -8,6 +8,12 @@ if (typeof global.structuredClone !== 'function') {
   };
 }
 
+// Add fetch polyfill for PouchDB
+global.fetch = require('node-fetch');
+global.Headers = global.fetch.Headers;
+global.Request = global.fetch.Request;
+global.Response = global.fetch.Response;
+
 // Mock next/router
 jest.mock('next/router', () => ({
   useRouter: () => ({
