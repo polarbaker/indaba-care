@@ -1,0 +1,1 @@
+Offline-first web application for childcare management built with Next.js, TypeScript, and Firebase. Empowering parents and caregivers with tools for child development tracking and resources.
