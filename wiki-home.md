@@ -1,7 +1,7 @@
 # Welcome to Indaba Care
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/polarbaker/indaba-care/main/public/images/Indaba%20Care%20Logo.jpeg" alt="Indaba Care Logo" width="300"/>
+  <img src="https://github.com/user-attachments/assets/d75f0c32-f1ef-4be3-9ced-092ca45ea324" alt="Indaba Care Logo" width="300"/>
   <p><em>Connecting families and caregivers, even when offline</em></p>
 </div>
 
