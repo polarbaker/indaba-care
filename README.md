@@ -1,5 +1,10 @@
 # Indaba Care
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/d75f0c32-f1ef-4be3-9ced-092ca45ea324" alt="Indaba Care Logo" width="300"/>
+  <p><em>Connecting families and caregivers, even when offline</em></p>
+</div>
+
 Indaba Care is an offline-first web application for childcare management, built with Next.js, TypeScript, and Firebase. It enables parents and nannies to manage childcare activities effectively, even with limited internet connectivity.
 
 ## Features
