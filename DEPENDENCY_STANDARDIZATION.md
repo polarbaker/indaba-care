@@ -74,24 +74,72 @@ import {
 // import { Drawer } from '@chakra-ui/drawer'
 ```
 
+### Chakra UI v3 API Changes
+
+Chakra UI v3 introduces several API changes from v2. Here are the key differences to be aware of:
+
+1. **VStack/HStack Changes**:
+   - Use `gap` instead of `spacing` for controlling space between elements
+   ```jsx
+   // ✅ Correct in v3
+   <VStack gap={4}>
+     <Box>Item 1</Box>
+     <Box>Item 2</Box>
+   </VStack>
+   
+   // ❌ Incorrect in v3
+   <VStack spacing={4}>
+     <Box>Item 1</Box>
+     <Box>Item 2</Box>
+   </VStack>
+   ```
+
+2. **useDisclosure Hook**:
+   - Returns `open` instead of `isOpen`
+   ```jsx
+   // ✅ Correct in v3
+   const { open, onOpen, onClose } = useDisclosure();
+   
+   // ❌ Incorrect in v3
+   const { isOpen, onOpen, onClose } = useDisclosure();
+   ```
+
+3. **Tabs Component**:
+   - Use `TabsList` instead of `TabList`
+   - Use `TabsTrigger` instead of `Tab`
+   - Use `TabsContent` instead of `TabPanel`
+   ```jsx
+   // ✅ Correct in v3
+   <Tabs>
+     <TabsList>
+       <TabsTrigger>Tab 1</TabsTrigger>
+       <TabsTrigger>Tab 2</TabsTrigger>
+     </TabsList>
+     <TabsContent>Content 1</TabsContent>
+     <TabsContent>Content 2</TabsContent>
+   </Tabs>
+   ```
+
 ### Example Component Usage
 
 ```jsx
-// A simple form with Chakra UI components
+// A simple form with Chakra UI v3 components
 function SimpleForm() {
   return (
     <Box p={4} borderWidth="1px" borderRadius="lg">
-      <FormControl mb={4}>
-        <FormLabel>Name</FormLabel>
-        <Input placeholder="Enter your name" />
-      </FormControl>
-      
-      <FormControl mb={4}>
-        <FormLabel>Email</FormLabel>
-        <Input type="email" placeholder="Enter your email" />
-      </FormControl>
-      
-      <Button colorScheme="blue">Submit</Button>
+      <VStack gap={4} align="stretch">
+        <Box>
+          <Text as="label" fontWeight="medium">Name</Text>
+          <Input placeholder="Enter your name" mt={1} />
+        </Box>
+        
+        <Box>
+          <Text as="label" fontWeight="medium">Email</Text>
+          <Input type="email" placeholder="Enter your email" mt={1} />
+        </Box>
+        
+        <Button colorScheme="blue">Submit</Button>
+      </VStack>
     </Box>
   )
 }

@@ -2,198 +2,143 @@ import React from 'react';
 import {
   Box,
   Button,
+  Center,
   Container,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   Text,
-  Textarea,
-  useColorMode,
-  useDisclosure,
-  useToast,
+  VStack,
 } from '@chakra-ui/react';
 
+/**
+ * Setup Check Page
+ * 
+ * This page uses only the most basic Chakra UI v3 components
+ * to verify that your dependency setup is working correctly.
+ */
 const SetupCheckPage = () => {
-  const toast = useToast();
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
-  const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
+  // Track state for the test interaction
+  const [testCount, setTestCount] = React.useState<number>(0);
+  const [textValue, setTextValue] = React.useState<string>('');
   
-  const showToast = () => {
-    toast({
-      title: 'Toast Test',
-      description: 'This is a test toast notification',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+  const incrementCounter = () => {
+    setTestCount(prev => prev + 1);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextValue(e.target.value);
   };
 
   return (
-    <Container maxW="container.xl" py={10}>
-      <Box textAlign="center" mb={10}>
-        <Heading as="h1" size="xl" mb={2}>
-          Indaba Care Setup Verification
-        </Heading>
-        <Text fontSize="lg" color="gray.500">
-          If all components below render correctly, your Chakra UI setup is working!
-        </Text>
-      </Box>
+    <Container maxW="container.xl" p={8}>
+      <Center mb={10}>
+        <VStack gap={4}>
+          <Heading as="h1" size="2xl">
+            Indaba Care Setup Verification
+          </Heading>
+          <Text fontSize="xl">
+            If this page renders correctly, your Chakra UI v3 setup is working!
+          </Text>
+        </VStack>
+      </Center>
 
-      <Flex 
-        direction="column"
-        p={5}
-        borderWidth={1}
-        borderRadius="lg"
+      {/* Test Card 1: Basic Component Tests */}
+      <Box 
+        p={6} 
+        borderWidth="1px" 
+        borderRadius="lg" 
         boxShadow="md"
-        bg={colorMode === 'light' ? 'white' : 'gray.700'}
-        mb={8}
+        mb={6}
       >
-        <Heading as="h2" size="md" mb={4}>
-          Test 1: Basic Components
+        <Heading as="h2" size="lg" mb={4}>
+          Basic Component Tests
         </Heading>
         
-        <Stack spacing={4} mb={6}>
-          <Button colorScheme="blue" onClick={showToast}>
-            Test Toast Notification
-          </Button>
+        <VStack align="stretch" gap={6} mt={4}>
+          {/* Test 1: Button Interaction */}
+          <Box p={4} borderWidth="1px" borderRadius="md">
+            <Heading as="h3" size="md" mb={3}>
+              Button Test
+            </Heading>
+            <Text mb={4}>Click the button to increment the counter</Text>
+            <Flex justify="space-between" align="center">
+              <Button colorScheme="blue" onClick={incrementCounter}>
+                Click me
+              </Button>
+              <Text fontSize="xl" fontWeight="bold">
+                Count: {testCount}
+              </Text>
+            </Flex>
+          </Box>
+
+          {/* Test 2: Input Field */}
+          <Box p={4} borderWidth="1px" borderRadius="md">
+            <Heading as="h3" size="md" mb={3}>
+              Input Test
+            </Heading>
+            <Text mb={4}>Type something in the input field below</Text>
+            <Input 
+              value={textValue}
+              onChange={handleInputChange}
+              placeholder="Type something here..."
+              mb={3}
+            />
+            {textValue && (
+              <Text color="green.500">You typed: {textValue}</Text>
+            )}
+          </Box>
           
-          <Button colorScheme="teal" onClick={toggleColorMode}>
-            Toggle {colorMode === 'light' ? 'Dark' : 'Light'} Mode
-          </Button>
-        </Stack>
+          {/* Test 3: Styling Test */}
+          <Box p={4} borderWidth="1px" borderRadius="md" bg="purple.50">
+            <Heading as="h3" size="md" mb={3} color="purple.600">
+              Styling Test
+            </Heading>
+            <Text mb={4}>If you can see this styled box with purple accents, styling is working correctly</Text>
+            <Flex justify="center">
+              <Button 
+                variant="outline" 
+                colorScheme="purple"
+                _hover={{ bg: 'purple.100' }}
+              >
+                Styled Button
+              </Button>
+            </Flex>
+          </Box>
+        </VStack>
+      </Box>
 
-        <FormControl mb={4}>
-          <FormLabel>Test Input Field</FormLabel>
-          <Input placeholder="This is a test input field" />
-        </FormControl>
-
-        <FormControl mb={4}>
-          <FormLabel>Test Select Field</FormLabel>
-          <Select placeholder="Select an option">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-          </Select>
-        </FormControl>
-
-        <FormControl mb={4}>
-          <FormLabel>Test Textarea</FormLabel>
-          <Textarea placeholder="This is a test textarea" />
-        </FormControl>
-      </Flex>
-
-      <Flex 
-        direction="column"
-        p={5}
-        borderWidth={1}
-        borderRadius="lg"
-        boxShadow="md"
-        bg={colorMode === 'light' ? 'white' : 'gray.700'}
-        mb={8}
-      >
-        <Heading as="h2" size="md" mb={4}>
-          Test 2: Complex Components
-        </Heading>
-
-        <Tabs variant="enclosed" mb={6}>
-          <TabList>
-            <Tab>Tab 1</Tab>
-            <Tab>Tab 2</Tab>
-            <Tab>Tab 3</Tab>
-          </TabList>
-
-          <TabPanels>
-            <TabPanel>
-              <Text>If you can see this, the Tabs component is working!</Text>
-            </TabPanel>
-            <TabPanel>
-              <Text>This is the content for the second tab</Text>
-            </TabPanel>
-            <TabPanel>
-              <Text>This is the content for the third tab</Text>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-
-        <Stack direction="row" spacing={4}>
-          <Button colorScheme="purple" onClick={onModalOpen}>
-            Open Test Modal
-          </Button>
-          <Button colorScheme="green" onClick={onDrawerOpen}>
-            Open Test Drawer
-          </Button>
-        </Stack>
-      </Flex>
-
-      {/* Test Modal */}
-      <Modal isOpen={isModalOpen} onClose={onModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Test Modal</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>If you can see this modal, the Modal component is working correctly!</Text>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onModalClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      {/* Test Drawer */}
-      <Drawer isOpen={isDrawerOpen} placement="right" onClose={onDrawerClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Test Drawer</DrawerHeader>
-          <DrawerBody>
-            <Text>If you can see this drawer, the Drawer component is working correctly!</Text>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-
+      {/* Result Section */}
       <Box 
-        mt={10} 
-        p={5} 
-        borderWidth={1} 
+        p={6} 
+        borderWidth="1px" 
         borderRadius="lg" 
-        borderColor="green.400"
-        bg="green.50"
-        color="green.800"
+        bg="green.50" 
+        borderColor="green.200"
       >
-        <Heading as="h3" size="md" mb={2}>
-          Setup Verification Result
+        <Heading as="h2" size="lg" mb={4} color="green.700">
+          Setup Verification Results
         </Heading>
-        <Text>If all components above rendered without errors and you can interact with them, your Chakra UI setup is working correctly! You can now proceed with development.</Text>
-        <Text mt={4} fontWeight="bold">If you see any errors:</Text>
-        <Text>1. Check the browser console for error messages</Text>
-        <Text>2. Run the setup script again: <code>./setup.sh</code></Text>
-        <Text>3. Refer to the <code>DEPENDENCY_STANDARDIZATION.md</code> for troubleshooting</Text>
+        <VStack align="stretch" gap={3}>
+          <Text>
+            <Text as="span" fontWeight="bold">✅ Basic Components:</Text> If you can see this page with proper styling, basic Chakra UI components are working.
+          </Text>
+          <Text>
+            <Text as="span" fontWeight="bold">✅ Interactivity:</Text> If the button counter and input field respond to your interactions, React state is working properly with Chakra.
+          </Text>
+        </VStack>
+        
+        <Box mt={6} p={4} bg="blue.50" borderRadius="md">
+          <Heading as="h3" size="md" mb={2} color="blue.600">
+            Next Steps
+          </Heading>
+          <Text>Your development environment is now correctly set up. You can:</Text>
+          <VStack align="stretch" mt={2} gap={1}>
+            <Text>1. Start developing your application</Text>
+            <Text>2. Review the DEPENDENCY_STANDARDIZATION.md document for component usage guidelines</Text>
+            <Text>3. Explore additional Chakra UI v3 components as needed</Text>
+          </VStack>
+        </Box>
       </Box>
     </Container>
   );
