@@ -103,14 +103,14 @@ const withPWA = require('next-pwa')({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // Changed from 'export' to undefined to enable dynamic server during development
-  // This allows us to test pages locally more easily
-  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
+  // Keep as undefined for development to ensure proper routing
+  output: undefined,
   trailingSlash: true,
+  // Required for image handling
   images: {
     unoptimized: true
   },
-  // Include all pages in the build, especially our test pages
+  // Include all pages in the build
   pageExtensions: ['tsx', 'ts', 'jsx', 'js', 'md', 'mdx'],
   typescript: {
     // !! WARN !!

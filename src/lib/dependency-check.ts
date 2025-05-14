@@ -23,15 +23,28 @@ export function checkDependencies(): { success: boolean; issues: string[] } {
     issues.push(`Chakra UI error: ${(error as Error).message}`);
   }
 
-  // Check PouchDB
-  try {
-    // We dynamic import PouchDB in the db.ts file, so we just check if it throws an error
-    const PouchDB = typeof window !== 'undefined' ? require('pouchdb-browser') : null;
-    if (!PouchDB && typeof window !== 'undefined') {
-      issues.push('PouchDB not available');
+  // Check PouchDB - only in browser context
+  if (typeof window !== 'undefined') {
+    try {
+      // Safely try to check for PouchDB
+      let PouchDB;
+      try {
+        // Try to dynamically require PouchDB to avoid SSR issues
+        PouchDB = require('pouchdb-browser');
+      } catch (importError) {
+        // If direct require fails, check if it's already in window (global scope)
+        PouchDB = (window as any).PouchDB;
+      }
+      
+      if (!PouchDB) {
+        issues.push('PouchDB not available');
+      } else {
+        // Log success but don't create an actual instance to avoid side effects
+        console.log('✓ PouchDB is available');
+      }
+    } catch (error) {
+      issues.push(`PouchDB error: ${(error as Error).message}`);
     }
-  } catch (error) {
-    issues.push(`PouchDB error: ${(error as Error).message}`);
   }
 
   return {

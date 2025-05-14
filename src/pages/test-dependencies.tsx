@@ -9,17 +9,41 @@ import {
   Code,
   Spinner
 } from '@chakra-ui/react';
-import { checkDependencies } from '../lib/dependency-check';
+
+// TypeScript interface for dependency status
+interface DependencyStatus {
+  success: boolean;
+  issues: string[];
+}
+
+// Create a client-only component to avoid SSR issues
+const ClientOnly: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+  
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  
+  if (!hasMounted) {
+    return null;
+  }
+  
+  return <>{children}</>;
+};
 
 const TestDependenciesPage = () => {
-  const [dependencyStatus, setDependencyStatus] = useState<{ success: boolean; issues: string[] } | null>(null);
+  const [dependencyStatus, setDependencyStatus] = useState<DependencyStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate a small delay to ensure all dependencies are loaded
-    const timer = setTimeout(() => {
+    // Only run on client-side
+    if (typeof window === 'undefined') return;
+    
+    const checkDeps = async () => {
       try {
-        const status = checkDependencies();
+        // Dynamic import the dependency checker at runtime
+        const depsModule = await import('../lib/dependency-check');
+        const status = depsModule.checkDependencies();
         setDependencyStatus(status);
         console.log('Dependency check results:', status);
       } catch (error) {
@@ -31,8 +55,10 @@ const TestDependenciesPage = () => {
       } finally {
         setIsLoading(false);
       }
-    }, 1000);
-
+    };
+    
+    // Add a small delay to ensure components are mounted
+    const timer = setTimeout(checkDeps, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -90,7 +116,14 @@ const TestDependenciesPage = () => {
             <Text>
               3. Check browser console for detailed validation logs
             </Text>
-            <Button mt={2} colorScheme="blue" onClick={() => console.log('Dependency validation utility:', checkDependencies)}>
+            <Button mt={2} colorScheme="blue" onClick={async () => {
+              try {
+                const depsModule = await import('../lib/dependency-check');
+                console.log('Dependency validation utility:', depsModule.checkDependencies);
+              } catch (error) {
+                console.warn('Dependency validation utility not available:', error);
+              }
+            }}>
               Log Validation Utility to Console
             </Button>
           </VStack>
