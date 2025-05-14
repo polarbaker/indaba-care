@@ -7,10 +7,9 @@ import {
   Text, 
   Button, 
   Container,
-  Image
+  Image,
+  Stack
 } from '@chakra-ui/react';
-import { Stack } from '@chakra-ui/layout';
-import { useColorModeValue } from '@chakra-ui/color-mode';
 import { useAuthContext } from '../contexts/AuthContext';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
@@ -36,9 +35,10 @@ export default function Home() {
     router.push('/login');
   };
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const textColor = useColorModeValue('gray.600', 'gray.300');
-  const headingColor = useColorModeValue('gray.800', 'white');
+  // Use static colors instead of useColorModeValue for Chakra UI v3 compatibility
+  const bgColor = 'white';
+  const textColor = 'gray.600';
+  const headingColor = 'gray.800';
   
   return (
     <Box>
@@ -216,7 +216,8 @@ interface FeatureCardProps {
 }
 
 function FeatureCard({ title, description, icon }: FeatureCardProps) {
-  const bgColor = useColorModeValue('white', 'gray.700');
+  // Use static colors instead of useColorModeValue for Chakra UI v3 compatibility
+  const bgColor = 'white';
   
   return (
     <Box
