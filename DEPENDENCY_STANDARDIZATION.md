@@ -147,6 +147,19 @@ function SimpleForm() {
 
 ## 🔧 Maintaining the Project
 
+### React Version Conflicts
+
+The project uses React 18.3.1, but some testing packages (like @testing-library/react-hooks) have peer dependencies on older React versions. We handle this by:
+
+1. Using `--legacy-peer-deps` flag with npm install
+2. Using package resolutions to enforce consistent versions
+
+This is why the setup script includes the `--legacy-peer-deps` flag. If you encounter dependency errors when installing, **do not downgrade React**. Instead, use the provided setup script or run:
+
+```bash
+npm install --legacy-peer-deps
+```
+
 ### When Updating Packages
 
 1. Always update the main `@chakra-ui/react` package first

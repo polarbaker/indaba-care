@@ -10,7 +10,8 @@ rm -rf node_modules package-lock.json
 
 echo ""
 echo "📦 Installing dependencies..."
-npm install
+echo "Using --legacy-peer-deps to handle React version conflicts..."
+npm install --legacy-peer-deps
 
 if [ $? -eq 0 ]; then
   echo ""
