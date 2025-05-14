@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '@chakra-ui/react';
-import { Heading } from '@chakra-ui/layout';
-import { Text } from '@chakra-ui/layout';
-import { Input } from '@chakra-ui/input';
-import { Button } from '@chakra-ui/button';
-import { Textarea } from '@chakra-ui/react';
-import { Flex } from '@chakra-ui/layout';
-import { IconButton } from '@chakra-ui/button';
-import { CloseButton } from '@chakra-ui/close-button';
-// Import Chakra UI components from their specific packages
-import { Stack, VStack, HStack } from '@chakra-ui/layout';
-import { Select } from '@chakra-ui/select';
-import { Divider } from '@chakra-ui/layout';
-import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/form-control';
-// Import Switch from main package since specific package is not available
-import { Switch } from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/toast';
-import { Card, CardHeader, CardBody } from '@chakra-ui/card';
-import { Tag, TagLabel, TagCloseButton } from '@chakra-ui/tag';
+import {
+  Box,
+  Heading,
+  Text,
+  Input,
+  Button,
+  Textarea,
+  Flex,
+  IconButton,
+  CloseButton,
+  Stack,
+  VStack,
+  HStack,
+  Switch
+} from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { familyDB } from '../lib/db';
 import { Family, ParentPreferences } from '../types';
@@ -33,7 +29,10 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
   const [newAllergy, setNewAllergy] = useState('');
   const [newDietaryRestriction, setNewDietaryRestriction] = useState('');
   
-  const toast = useToast();
+  // Use console.log for now as useToast is not available in current version
+  const toast = (props: any) => {
+    console.log('Toast:', props);
+  };
   const queryClient = useQueryClient();
   const { performSync } = useSync();
   
@@ -171,26 +170,25 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
   };
   
   return (
-    <Card variant="outline" mb={8}>
-      <CardHeader pb={2}>
-        <Heading size="md">Parent Preferences</Heading>
-        <Text color="gray.600" fontSize="sm">
-          Customize your settings and preferences for childcare
-        </Text>
-      </CardHeader>
-      
-      <CardBody>
-        <VStack spacing={6} align="stretch">
+    <Box as="form" p={6} boxShadow="md" borderWidth="1px" borderRadius="lg" bg="white">
+      <Box pb={2}>
+        <Heading size="md" mb={2}>Parent Preferences</Heading>
+        <Text>Customize your experience and set important information for childcare providers.</Text>
+      </Box>
+
+      <Box pt={4}>
+        <VStack gap={6} align="stretch">
           <Box>
             <Heading size="sm" mb={3}>Language & Communication</Heading>
-            <FormControl mb={4}>
-              <FormLabel>Preferred Language</FormLabel>
-              <Select
+            <Box mb={4}>
+              <Text fontWeight="bold" mb={1}>Preferred Language</Text>
+              <select
                 value={preferences.languagePreference}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setPreferences({
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPreferences({
                   ...preferences,
                   languagePreference: e.target.value,
                 })}
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', borderWidth: '1px' }}
               >
                 <option value="en">English</option>
                 <option value="fr">French</option>
@@ -198,14 +196,16 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                 <option value="sw">Swahili</option>
                 <option value="xh">Xhosa</option>
                 <option value="af">Afrikaans</option>
-              </Select>
-            </FormControl>
-            
+              </select>
+            </Box>
+          </Box>
+          
+          <Box>
             <Heading size="sm" mb={3}>Notification Preferences</Heading>
-            <Stack spacing={3} mb={4}>
-              <FormControl display="flex" alignItems="center">
-                <FormLabel mb="0">Email Notifications</FormLabel>
-                <Box as="label" display="flex" alignItems="center">
+            <Stack gap={3} mb={4}>
+              <Box display="flex" alignItems="center">
+                <Text mb="0">Email Notifications</Text>
+                <Box as="label" display="flex" alignItems="center" ml={2}>
                   <input 
                     type="checkbox" 
                     checked={preferences.notificationPreferences.email}
@@ -214,11 +214,11 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                   />
                   <Text fontSize="sm">Enable</Text>
                 </Box>
-              </FormControl>
+              </Box>
               
-              <FormControl display="flex" alignItems="center">
-                <FormLabel mb="0">Push Notifications</FormLabel>
-                <Box as="label" display="flex" alignItems="center">
+              <Box display="flex" alignItems="center">
+                <Text mb="0">Push Notifications</Text>
+                <Box as="label" display="flex" alignItems="center" ml={2}>
                   <input 
                     type="checkbox" 
                     checked={preferences.notificationPreferences.push}
@@ -227,11 +227,11 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                   />
                   <Text fontSize="sm">Enable</Text>
                 </Box>
-              </FormControl>
+              </Box>
               
-              <FormControl display="flex" alignItems="center">
-                <FormLabel mb="0">SMS Notifications</FormLabel>
-                <Box as="label" display="flex" alignItems="center">
+              <Box display="flex" alignItems="center">
+                <Text mb="0">SMS Notifications</Text>
+                <Box as="label" display="flex" alignItems="center" ml={2}>
                   <input 
                     type="checkbox" 
                     checked={preferences.notificationPreferences.sms}
@@ -240,17 +240,17 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                   />
                   <Text fontSize="sm">Enable</Text>
                 </Box>
-              </FormControl>
+              </Box>
             </Stack>
           </Box>
           
-          <Divider />
+          <Box height="1px" bg="gray.200" my={4} />
           
           <Box>
             <Heading size="sm" mb={3}>Emergency Contacts</Heading>
             
             {preferences.emergencyContacts.length > 0 ? (
-              <VStack align="stretch" spacing={3} mb={4}>
+              <VStack align="stretch" gap={3} mb={4}>
                 {preferences.emergencyContacts.map((contact, index) => (
                   <Box
                     key={index}
@@ -279,9 +279,9 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
             
             <Box p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
               <Heading size="xs" mb={3}>Add Emergency Contact</Heading>
-              <Stack spacing={3}>
-                <FormControl>
-                  <FormLabel fontSize="sm">Name</FormLabel>
+              <Stack gap={3}>
+                <Box>
+                  <Text fontSize="sm">Name</Text>
                   <Input
                     size="sm"
                     value={newContact.name}
@@ -290,22 +290,28 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                       name: e.target.value,
                     })}
                   />
-                </FormControl>
+                </Box>
                 
-                <FormControl>
-                  <FormLabel fontSize="sm">Relationship</FormLabel>
-                  <Input
-                    size="sm"
+                <Box>
+                  <Text fontSize="sm">Relationship</Text>
+                  <select
                     value={newContact.relationship}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setNewContact({
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setNewContact({
                       ...newContact,
                       relationship: e.target.value,
                     })}
-                  />
-                </FormControl>
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', borderWidth: '1px' }}
+                  >
+                    <option value="">Select a relationship</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Father">Father</option>
+                    <option value="Guardian">Guardian</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </Box>
                 
-                <FormControl>
-                  <FormLabel fontSize="sm">Phone Number</FormLabel>
+                <Box>
+                  <Text fontSize="sm">Phone Number</Text>
                   <Input
                     size="sm"
                     value={newContact.phone}
@@ -314,7 +320,7 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                       phone: e.target.value,
                     })}
                   />
-                </FormControl>
+                </Box>
                 
                 <Button size="sm" onClick={handleAddContact}>
                   Add Contact
@@ -323,26 +329,28 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
             </Box>
           </Box>
           
-          <Divider />
+          <Box height="1px" bg="gray.200" my={4} />
           
           <Box>
             <Heading size="sm" mb={3}>Health Information</Heading>
             
-            <FormControl mb={4}>
-              <FormLabel>Allergies</FormLabel>
+            <Box mb={4}>
+              <Text fontWeight="bold" mb={1}>Allergies</Text>
               <Flex flexWrap="wrap" mb={2}>
                 {(preferences.allergies || []).map((allergy, index) => (
-                  <Tag
+                  <Flex
                     key={index}
-                    size="md"
+                    bg="red.500"
+                    color="white"
+                    px={3}
+                    py={1}
                     borderRadius="full"
-                    variant="solid"
-                    colorScheme="red"
                     m={1}
+                    alignItems="center"
                   >
-                    <TagLabel>{allergy}</TagLabel>
-                    <TagCloseButton onClick={() => handleRemoveAllergy(allergy)} />
-                  </Tag>
+                    <Text fontSize="sm" mr={1}>{allergy}</Text>
+                    <CloseButton size="sm" color="white" onClick={() => handleRemoveAllergy(allergy)} />
+                  </Flex>
                 ))}
               </Flex>
               <Flex>
@@ -354,23 +362,25 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                 />
                 <Button onClick={handleAddAllergy}>Add</Button>
               </Flex>
-            </FormControl>
+            </Box>
             
-            <FormControl mb={4}>
-              <FormLabel>Dietary Restrictions</FormLabel>
+            <Box mb={4}>
+              <Text fontWeight="bold" mb={1}>Dietary Restrictions</Text>
               <Flex flexWrap="wrap" mb={2}>
                 {(preferences.dietaryRestrictions || []).map((restriction, index) => (
-                  <Tag
+                  <Flex
                     key={index}
-                    size="md"
+                    bg="orange.500"
+                    color="white"
+                    px={3}
+                    py={1}
                     borderRadius="full"
-                    variant="solid"
-                    colorScheme="orange"
                     m={1}
+                    alignItems="center"
                   >
-                    <TagLabel>{restriction}</TagLabel>
-                    <TagCloseButton onClick={() => handleRemoveDietaryRestriction(restriction)} />
-                  </Tag>
+                    <Text fontSize="sm" mr={1}>{restriction}</Text>
+                    <CloseButton size="sm" color="white" onClick={() => handleRemoveDietaryRestriction(restriction)} />
+                  </Flex>
                 ))}
               </Flex>
               <Flex>
@@ -382,36 +392,33 @@ export default function ParentPreferencesForm({ family }: ParentPreferencesProps
                 />
                 <Button onClick={handleAddDietaryRestriction}>Add</Button>
               </Flex>
-            </FormControl>
+            </Box>
           </Box>
           
-          <Divider />
+          <Box height="1px" bg="gray.200" my={4} />
           
           <Box>
-            <FormControl>
-              <FormLabel>Additional Notes</FormLabel>
-              <Textarea
-                value={preferences.additionalNotes || ''}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPreferences({
-                  ...preferences,
-                  additionalNotes: e.target.value,
-                })}
-                placeholder="Any additional information or special instructions..."
-                rows={4}
-              />
-            </FormControl>
+            <Text fontWeight="bold" mb={1}>Additional Notes</Text>
+            <Textarea
+              value={preferences.additionalNotes || ''}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPreferences({
+                ...preferences,
+                additionalNotes: e.target.value,
+              })}
+              placeholder="Any additional information or special instructions..."
+              rows={4}
+            />
           </Box>
           
           <Button
             colorScheme="blue"
             onClick={handleSavePreferences}
-            isLoading={updateFamilyMutation.isPending}
-            loadingText="Saving..."
+            loading={updateFamilyMutation.isPending}
           >
             Save Preferences
           </Button>
         </VStack>
-      </CardBody>
-    </Card>
+      </Box>
+    </Box>
   );
 }

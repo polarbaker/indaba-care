@@ -10,16 +10,10 @@ import {
   Badge,
   Skeleton,
   Flex,
+  Stack,
+  Input,
+  InputGroup,
 } from '@chakra-ui/react';
-// Import components from their specific packages
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/card';
-import { Stack } from '@chakra-ui/layout';
-import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
-import { Select } from '@chakra-ui/select';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/tabs';
-import { Tag, TagLeftIcon, TagLabel } from '@chakra-ui/tag';
-import { useColorModeValue } from '@chakra-ui/color-mode';
-import { Alert, AlertIcon } from '@chakra-ui/alert';
 import Layout from '../components/Layout';
 import { useAuthContext } from '../contexts/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -46,7 +40,6 @@ export default function ResourceHub() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const cardBackground = useColorModeValue('white', 'gray.700');
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -185,14 +178,13 @@ export default function ResourceHub() {
         <Box py={5}>
           <Skeleton height="40px" width="300px" mb={5} />
           <Skeleton height="20px" width="500px" mb={10} />
-          <Tabs>
-            <Skeleton height="40px" mb={5} />
+          <Box>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
               <Skeleton height="300px" />
               <Skeleton height="300px" />
               <Skeleton height="300px" />
             </SimpleGrid>
-          </Tabs>
+          </Box>
         </Box>
       </Layout>
     );
@@ -209,143 +201,167 @@ export default function ResourceHub() {
         </Text>
 
         {!isOnline && (
-          <Alert status="info" mb={6}>
-            <AlertIcon />
+          <Box p={4} mb={6} bg="blue.50" color="blue.800" borderRadius="md">
             You're currently offline. Only resources marked for offline use are available.
-          </Alert>
+          </Box>
         )}
 
         <Flex mb={6} direction={{ base: 'column', md: 'row' }} gap={4}>
-          <InputGroup maxW={{ base: '100%', md: '60%' }}>
-            <InputLeftElement pointerEvents="none">
-              <Box
-                color="gray.400"
-                role="img"
-                aria-label="search"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  width="20px"
-                  height="20px"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </Box>
-            </InputLeftElement>
+          <Box position="relative" maxW={{ base: '100%', md: '60%' }}>
+            <Box
+              position="absolute"
+              left="10px"
+              top="50%"
+              transform="translateY(-50%)"
+              color="gray.400"
+              role="img"
+              aria-label="search"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              zIndex={2}
+              pointerEvents="none"
+            >
+              🔍
+            </Box>
             <Input
               placeholder="Search resources..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              pl={8}
             />
-          </InputGroup>
+          </Box>
 
-          <Select
-            placeholder="All Categories"
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
+          <Box
             maxW={{ base: '100%', md: '40%' }}
           >
+            <select
+              value={filterCategory}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterCategory(e.target.value)}
+              style={{ 
+                padding: '8px',
+                borderRadius: '4px',
+                borderWidth: '1px',
+                width: '100%'
+              }}
+            >
+            <option value="">All Categories</option>
             {RESOURCE_CATEGORIES.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
             ))}
-          </Select>
+            </select>
+          </Box>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSearchQuery('');
+              setFilterCategory('');
+            }}
+          >
+            Clear Filters
+          </Button>
         </Flex>
 
-        <Tabs
-          variant="soft-rounded"
-          colorScheme="blue"
-          onChange={setActiveTabIndex}
-          index={activeTabIndex}
-        >
-          <TabList overflowX="auto" pb={4} css={{
-            scrollbarWidth: 'thin',
-            '&::-webkit-scrollbar': {
-              height: '6px',
-            },
-            '&::-webkit-scrollbar-track': {
-              background: 'rgba(0, 0, 0, 0.05)',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: 'rgba(0, 0, 0, 0.2)',
-              borderRadius: '3px',
-            },
-          }}>
-            <Tab>All</Tab>
-            {RESOURCE_CATEGORIES.map((category) => (
-              <Tab key={category.id}>{category.name}</Tab>
-            ))}
-          </TabList>
-          
-          <TabPanels>
-            {/* All Resources Tab */}
-            <TabPanel p={0}>
-              {isResourcesLoading ? (
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-                  <Skeleton height="300px" />
-                  <Skeleton height="300px" />
-                  <Skeleton height="300px" />
-                </SimpleGrid>
-              ) : filteredResources.length > 0 ? (
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-                  {filteredResources.map((resource) => (
-                    <ResourceCard 
-                      key={resource.id} 
-                      resource={resource}
-                      onMarkOffline={handleMarkOffline}
-                      isOffline={!isOnline}
-                    />
-                  ))}
-                </SimpleGrid>
-              ) : (
-                <Box textAlign="center" py={10}>
-                  <Text mb={4}>No resources found matching your criteria.</Text>
-                  <Button onClick={() => {
-                    setSearchQuery('');
-                    setFilterCategory('');
-                  }}>
-                    Clear Filters
-                  </Button>
-                </Box>
-              )}
-            </TabPanel>
-
-            {/* Category Tabs */}
+        {/* Custom tab interface */}
+        <Box>
+          {/* Tab buttons */}
+          <Flex overflowX="auto" pb={4}>
+            <Button
+              mr={2}
+              variant={activeTabIndex === 0 ? "solid" : "outline"}
+              colorScheme="blue"
+              onClick={() => setActiveTabIndex(0)}
+            >
+              All
+            </Button>
+            
             {RESOURCE_CATEGORIES.map((category, index) => (
-              <TabPanel key={category.id} p={0}>
+              <Button
+                key={category.id}
+                mr={2}
+                variant={activeTabIndex === index + 1 ? "solid" : "outline"}
+                colorScheme="blue"
+                onClick={() => setActiveTabIndex(index + 1)}
+              >
+                {category.name}
+              </Button>
+            ))}
+          </Flex>
+          
+          {/* Tab content */}
+          <Box pt={4}>
+            {/* All Resources Tab */}
+            {activeTabIndex === 0 && (
+              <Box>
                 {isResourcesLoading ? (
                   <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                     <Skeleton height="300px" />
                     <Skeleton height="300px" />
+                    <Skeleton height="300px" />
                   </SimpleGrid>
-                ) : getTabResources(index + 1).length > 0 ? (
+                ) : filteredResources.length > 0 ? (
                   <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-                    {getTabResources(index + 1).map((resource) => (
-                      <ResourceCard 
+                    {filteredResources.map((resource) => (
+                      <ResourceCardWrapper 
                         key={resource.id} 
-                        resource={resource}
-                        onMarkOffline={handleMarkOffline}
-                        isOffline={!isOnline}
+                        resource={resource} 
                       />
                     ))}
                   </SimpleGrid>
                 ) : (
                   <Box textAlign="center" py={10}>
-                    <Text>No resources found in this category.</Text>
+                    <Text mb={4}>No resources found matching your criteria.</Text>
+                    <Button
+                      colorScheme="blue"
+                      onClick={() => {
+                        setSearchQuery('');
+                        setFilterCategory('');
+                        setActiveTabIndex(0);
+                      }}
+                    >
+                      Clear Filters
+                    </Button>
                   </Box>
                 )}
-              </TabPanel>
+              </Box>
+            )}
+
+            {/* Category Tabs */}
+            {RESOURCE_CATEGORIES.map((category, index) => (
+              activeTabIndex === index + 1 && (
+                <Box key={category.id}>
+                  {isResourcesLoading ? (
+                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+                      <Skeleton height="300px" />
+                      <Skeleton height="300px" />
+                      <Skeleton height="300px" />
+                    </SimpleGrid>
+                  ) : getTabResources(index + 1).length > 0 ? (
+                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+                      {getTabResources(index + 1).map((resource) => (
+                        <ResourceCardWrapper 
+                          key={resource.id} 
+                          resource={resource}
+                        />
+                      ))}
+                    </SimpleGrid>
+                  ) : (
+                    <Box textAlign="center" py={10}>
+                      <Text>No resources found in this category.</Text>
+                    </Box>
+                  )}
+                </Box>
+              )
             ))}
-          </TabPanels>
-        </Tabs>
+          </Box>
+        </Box>
       </Box>
     </Layout>
+  // Regular export statement properly formatted
   );
 }
 
@@ -355,10 +371,54 @@ interface ResourceCardProps {
   isOffline: boolean;
 }
 
+// Simple wrapper component for the resource card
+function ResourceCardWrapper({ resource }: { resource: Resource }) {
+  const { isOnline } = useSync();
+  
+  return (
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      bg="white"
+      _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
+      transition="all 0.2s"
+    >
+      <Image
+        src={resource.thumbnailUrl || `https://via.placeholder.com/500x300?text=${resource.title}`}
+        alt={resource.title}
+        height="150px"
+        width="100%"
+        objectFit="cover"
+      />
+      <Box p={4}>
+        <Heading size="md" mb={2}>{resource.title}</Heading>
+        <Text mb={3} overflow="hidden" textOverflow="ellipsis" display="-webkit-box" style={{ WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{resource.description}</Text>
+        <Flex justify="space-between">
+          <Button
+            colorScheme="blue"
+            size="sm"
+            onClick={() => {}}
+          >
+            View Details
+          </Button>
+          {isOnline && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {}}
+            >
+              {resource.isAvailableOffline ? "Remove Offline" : "Save Offline"}
+            </Button>
+          )}
+        </Flex>
+      </Box>
+    </Box>
+  );
+}
+
 function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps) {
   const router = useRouter();
-  const cardBg = useColorModeValue('white', 'gray.700');
-  const cardHoverBg = useColorModeValue('gray.50', 'gray.600');
 
   // Hide resource if we're offline and it's not available offline
   if (isOffline && !resource.isAvailableOffline) {
@@ -385,12 +445,14 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
   };
 
   return (
-    <Card 
-      bg={cardBg}
+    <Box 
+      borderWidth="1px"
+      borderRadius="lg"
+      bg="white"
       _hover={{ 
         transform: 'translateY(-2px)', 
         boxShadow: 'md',
-        bg: cardHoverBg 
+        bg: 'gray.50' 
       }}
       transition="all 0.2s"
       overflow="hidden"
@@ -416,7 +478,7 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
         </Badge>
       </Box>
 
-      <CardHeader pb={2}>
+      <Box p={4} pb={2}>
         <Flex justify="space-between" align="flex-start">
           <Heading size="md" title={resource.title}>
             <Text as="span" overflow="hidden" textOverflow="ellipsis" display="-webkit-box" style={{ WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{resource.title}</Text>
@@ -427,18 +489,27 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
             </Badge>
           )}
         </Flex>
-      </CardHeader>
+      </Box>
 
-      <CardBody py={2}>
-        <Tag size="sm" colorScheme="blue" mb={3}>
-          <TagLabel>{getCategoryName(resource.category)}</TagLabel>
-        </Tag>
+      <Box px={4} py={2}>
+        <Box 
+          display="inline-block" 
+          bg="blue.100" 
+          color="blue.700" 
+          px={2} 
+          py={1} 
+          borderRadius="md" 
+          fontSize="sm" 
+          mb={3}
+        >
+          {getCategoryName(resource.category)}
+        </Box>
         <Text fontSize="sm" color="gray.600" overflow="hidden" textOverflow="ellipsis" display="-webkit-box" style={{ WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
           {resource.description}
         </Text>
-      </CardBody>
+      </Box>
 
-      <CardFooter pt={0}>
+      <Box p={4} pt={0}>
         <Stack direction="row" gap={2} width="100%">
           <Button
             flex={1}
@@ -458,7 +529,7 @@ function ResourceCard({ resource, onMarkOffline, isOffline }: ResourceCardProps)
             {resource.isAvailableOffline ? 'Remove Offline' : 'Save Offline'}
           </Button>
         </Stack>
-      </CardFooter>
-    </Card>
+      </Box>
+    </Box>
   );
 }
