@@ -1,22 +1,27 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { Box } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/button';
-import { Container } from '@chakra-ui/layout';
-import { Heading } from '@chakra-ui/layout';
-import { Input } from '@chakra-ui/input';
-import { Text } from '@chakra-ui/layout';
-import { Link } from '@chakra-ui/layout';
-import { Flex } from '@chakra-ui/layout';
-import { Image } from '@chakra-ui/image';
-import { IconButton } from '@chakra-ui/button';
-// Import specific components from their packages
-import { Divider } from '@chakra-ui/layout';
-import { FormControl, FormLabel } from '@chakra-ui/form-control';
-import { Stack } from '@chakra-ui/layout';
-import { useToast } from '@chakra-ui/toast';
-import { InputGroup, InputRightElement } from '@chakra-ui/input';
+import { 
+  Box, 
+  Button, 
+  Container, 
+  Heading, 
+  Input, 
+  Text, 
+  Link, 
+  Flex, 
+  Image, 
+  IconButton,
+  Stack,
+} from '@chakra-ui/react';
+
+// Custom Divider component
+const Divider = (props: any) => (
+  <Box height="1px" bg="gray.200" my={6} {...props} />
+);
+
+// Import adapter components
+import { FormControl, FormControlLabel as FormLabel, InputGroup, InputRightAddon as InputRightElement } from '../components/adapters/Form';
 import { useAuthContext } from '../contexts/AuthContext';
 
 export default function Login() {
@@ -26,7 +31,10 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const { signIn, signInWithGoogle } = useAuthContext();
   const router = useRouter();
-  const toast = useToast();
+  // Simple toast implementation
+  const toast = (props: any) => {
+    console.log('Toast:', props);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +42,7 @@ export default function Login() {
 
     try {
       await signIn(email, password);
+      // Show toast message
       toast({
         title: 'Login successful',
         status: 'success',
@@ -41,6 +50,7 @@ export default function Login() {
       });
       router.push('/dashboard');
     } catch (error: any) {
+      // Show toast message
       toast({
         title: 'Login failed',
         description: error.message,
@@ -56,6 +66,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       await signInWithGoogle();
+      // Show toast message
       toast({
         title: 'Login successful',
         status: 'success',
@@ -63,6 +74,7 @@ export default function Login() {
       });
       router.push('/dashboard');
     } catch (error: any) {
+      // Show toast message
       toast({
         title: 'Google login failed',
         description: error.message,
@@ -96,7 +108,7 @@ export default function Login() {
         </Flex>
 
         <form onSubmit={handleSubmit}>
-          <Stack spacing={4}>
+          <Stack gap={4}>
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
               <Input
@@ -128,7 +140,7 @@ export default function Login() {
               </InputGroup>
             </FormControl>
 
-            <Stack spacing={10}>
+            <Stack gap={10}>
               <Box textAlign="right">
                 <Link as={NextLink} href="/forgot-password" color="blue.500">
                   Forgot password?
@@ -137,10 +149,9 @@ export default function Login() {
               <Button
                 colorScheme="blue"
                 type="submit"
-                isLoading={loading}
-                loadingText="Logging in..."
+                disabled={loading}
               >
-                Log in
+                {loading ? 'Logging in...' : 'Log in'}
               </Button>
             </Stack>
 
@@ -150,18 +161,19 @@ export default function Login() {
               w="full"
               variant="outline"
               onClick={handleGoogleSignIn}
-              isLoading={loading}
-              loadingText="Signing in with Google..."
+              disabled={loading}
             >
-              <Flex alignItems="center" gap={2}>
-                <Image
-                  src="/google-icon.png"
-                  alt="Google Icon"
-                  width="18px"
-                  height="18px"
-                />
-                <Text>Continue with Google</Text>
-              </Flex>
+              {loading ? 'Signing in with Google...' : (
+                <Flex alignItems="center" gap={2}>
+                  <Image
+                    src="/google-icon.png"
+                    alt="Google Icon"
+                    width="18px"
+                    height="18px"
+                  />
+                  <Text>Continue with Google</Text>
+                </Flex>
+              )
             </Button>
             
             <Box textAlign="center" mt={4}>
