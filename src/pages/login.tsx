@@ -173,7 +173,7 @@ export default function Login() {
                   />
                   <Text>Continue with Google</Text>
                 </Flex>
-              )
+              )}
             </Button>
             
             <Box textAlign="center" mt={4}>
