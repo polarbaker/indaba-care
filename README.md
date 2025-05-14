@@ -62,14 +62,21 @@ Indaba Care is an offline-first web application for childcare management, built 
    NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
    ```
 
-4. Run the development server:
+4. We recommend using our setup script to ensure all dependencies are correctly installed:
+   ```bash
+   ./setup.sh
+   ```
+
+5. Run the development server:
    ```bash
    npm run dev
    # or
    yarn dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+7. Verify your setup is working correctly by visiting [http://localhost:3000/setup-check](http://localhost:3000/setup-check) to ensure all UI components render correctly.
 
 ## Firebase Setup
 

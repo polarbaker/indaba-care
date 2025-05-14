@@ -19,10 +19,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/react": "^3.17.0",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/system": "^2.6.2",
-    "@chakra-ui/theme": "^2.3.1",
+    "@chakra-ui/theme": "^3.4.6",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@tanstack/react-query": "^5.76.0",
@@ -71,8 +71,9 @@
     "ts-jest": "^29.1.0"
   },
   "resolutions": {
-    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/react": "^3.17.0",
     "@chakra-ui/system": "^2.6.2",
-    "@chakra-ui/*": "^2.0.0"
+    "@chakra-ui/theme": "^3.4.6",
+    "@chakra-ui/*": "^3.0.0"
   }
 }
