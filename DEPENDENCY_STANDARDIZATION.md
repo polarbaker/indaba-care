@@ -153,6 +153,16 @@ The project uses React 18.3.1, but some testing packages (like @testing-library/
 
 1. Using `--legacy-peer-deps` flag with npm install
 2. Using package resolutions to enforce consistent versions
+3. Runtime validation to catch any dependency issues
+
+### PouchDB and Firebase Integration
+
+The offline-first architecture relies on PouchDB (v9.0.0) working correctly with Firebase. These dependencies must remain compatible:
+
+- **PouchDB**: Used for local storage and offline data management
+- **Firebase**: Provides the backend services and synchronization
+
+Testing both online and offline workflows is essential when upgrading either of these dependencies.
 
 This is why the setup script includes the `--legacy-peer-deps` flag. If you encounter dependency errors when installing, **do not downgrade React**. Instead, use the provided setup script or run:
 
@@ -214,13 +224,59 @@ TypeError: Cannot read properties of undefined (reading 'useToast')
 After updating dependencies, verify your installation with these steps:
 
 1. Run the setup script: `./setup.sh`
-2. Build the project: `npm run build`
-3. Start the development server: `npm run dev`
-4. Navigate to http://localhost:3000
-5. Check the console for any errors
+2. Run the standalone dependency check: `node verify-dependencies.js`
+3. Build the project: `npm run build`
+4. Start the development server: `npm run dev`
+5. Navigate to http://localhost:3000
+
+### Standalone Dependency Verification
+
+We've created a simple yet powerful verification script that can be run directly from the command line:
+
+```bash
+node verify-dependencies.js
+```
+
+This script provides a comprehensive report that:
+
+- Verifies React 18.3.x is correctly installed
+- Confirms Chakra UI components are available and using v3 compatible APIs
+- Validates PouchDB installation
+- Provides troubleshooting information if any issues are found
+
+### Automated Runtime Dependency Validation
+
+In addition to the standalone script, the project includes automated dependency validation that runs when the app starts:
+
+1. A utility in `src/lib/dependency-check.ts` verifies critical dependencies at runtime
+2. It checks React version, Chakra UI, and PouchDB compatibility
+3. Any issues are logged to the console with clear error messages
+
+This dual approach ensures dependency issues are caught early, whether during development setup or at runtime.
 
 ---
 
 <div align="right">
   <em>Last updated: May 14, 2025</em>
 </div>
+
+## 📊 Dependency Monitoring
+
+### Integration with CI/CD
+
+Our CI/CD pipeline includes dependency validation as part of the build process:
+
+1. Automated tests verify that all components render correctly
+2. The setup-check.tsx page serves as both a manual check and automated test
+3. Build failures will occur if critical dependencies are incompatible
+
+### Updating Dependencies Safely
+
+Follow this process when updating any dependencies:
+
+1. Create a branch specifically for the dependency update
+2. Run the setup script after updating package.json
+3. Test thoroughly using the setup verification page
+4. Check for console warnings from the dependency validation utility
+5. Run the test suite: `npm test`
+6. Merge only after all checks pass

@@ -43,14 +43,23 @@ Indaba Care is an offline-first web application for childcare management, built 
    cd indaba-care
    ```
 
-2. Install dependencies:
+2. Install dependencies using our setup script:
    ```bash
-   npm install
-   # or
-   yarn install
+   ./setup.sh
    ```
+   
+   This script handles React version compatibility and ensures consistent dependency installation.
+   
+   > **Note**: If you encounter any permission issues, make the script executable first with `chmod +x setup.sh`
+   
+3. Verify dependency installation:
+   ```bash
+   node verify-dependencies.js
+   ```
+   
+   This will run a comprehensive check of your dependency installation and ensure everything is properly set up.
 
-3. Set up environment variables:
+4. Set up environment variables:
    - Create a `.env.local` file in the root directory
    - Add your Firebase configuration:
    ```
