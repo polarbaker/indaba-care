@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+// Import our adapter instead of the original ChakraProvider
+import { ChakraProviderAdapter as ChakraProvider } from '../components/adapters/ChakraAdapter';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -46,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
   // This is a temporary workaround until proper type definitions are available
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Using ChakraProvider with default settings for Chakra UI v3 compatibility */}
+      {/* Using custom ChakraProviderAdapter with modified API for Chakra UI v3 compatibility */}
       <ChakraProvider>
         <AuthProvider>
           <Component {...pageProps} />
