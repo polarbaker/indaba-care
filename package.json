@@ -19,26 +19,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@chakra-ui/alert": "^2.2.2",
-    "@chakra-ui/avatar": "^2.3.0",
-    "@chakra-ui/button": "^2.1.0",
-    "@chakra-ui/card": "^2.2.0",
-    "@chakra-ui/color-mode": "^2.2.0",
-    "@chakra-ui/form-control": "^2.2.0",
-    "@chakra-ui/icons": "^2.2.4",
-    "@chakra-ui/input": "^2.1.2",
-    "@chakra-ui/layout": "^2.3.1",
-    "@chakra-ui/modal": "^2.3.1",
-    "@chakra-ui/react": "^3.17.0",
-    "@chakra-ui/select": "^2.1.2",
-    "@chakra-ui/stat": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/system": "^2.6.2",
-    "@chakra-ui/table": "^2.1.0",
-    "@chakra-ui/tabs": "^3.0.0",
-    "@chakra-ui/tag": "^3.1.1",
-    "@chakra-ui/theme": "^3.4.6",
-    "@chakra-ui/toast": "^7.0.2",
-    "@chakra-ui/transition": "^2.1.0",
+    "@chakra-ui/theme": "^2.3.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@tanstack/react-query": "^5.76.0",
@@ -85,5 +69,10 @@
     "node-fetch": "^2.7.0",
     "prettier": "^3.5.3",
     "ts-jest": "^29.1.0"
+  },
+  "resolutions": {
+    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/system": "^2.6.2",
+    "@chakra-ui/*": "^2.0.0"
   }
 }
